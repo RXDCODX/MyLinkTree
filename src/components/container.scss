@@ -14,7 +14,7 @@
 }
 
 .parent-container {
-  top: 5%;
+  inset: 0;
   position: absolute;
   display: flex;
   align-items: center;
@@ -24,6 +24,7 @@
 }
 
 .main-container {
+  top: 20em;
   display: flex;
   position: relative;
   flex-direction: column;
