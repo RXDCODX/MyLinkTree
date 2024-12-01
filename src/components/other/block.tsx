@@ -13,9 +13,6 @@ export const OtherBlock = () => {
       <Button onClick={() => changeLink("https://shikimori.one/PYROKXNEZXZ")}>
         SHIKIMORI
       </Button>
-      <Button onClick={() => changeLink("https://vk.com/pyrokxnezxz_official")}>
-        VK GROUP
-      </Button>
       <Button onClick={() => changeLink("https://github.com/Pyrok1nezyz")}>
         GIT HUB
       </Button>

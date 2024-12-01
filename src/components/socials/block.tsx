@@ -19,6 +19,9 @@ export const SocialBlock = () => {
       <Button onClick={() => changeLink("https://discord.gg/XWXDERj95x")}>
         DISCORD
       </Button>
+      <Button onClick={() => changeLink("https://vk.com/pyrokxnezxz_official")}>
+        VK GROUP
+      </Button>
     </>
   );
 };
