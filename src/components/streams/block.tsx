@@ -10,7 +10,11 @@ export const StreamsBlock = () => {
   return (
     <>
       <h2>STREAMS</h2>
-      <Button onClick={() => changeLink("https://twitch.com/pyrokxnezxz")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://twitch.com/rxdcodx")}
+      >
         TWITCH
       </Button>
     </>

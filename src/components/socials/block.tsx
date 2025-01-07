@@ -10,16 +10,32 @@ export const SocialBlock = () => {
   return (
     <>
       <h2>SOCIALS</h2>
-      <Button onClick={() => changeLink("https://t.me/ZeChosenPessimist")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://t.me/ZeChosenPessimist")}
+      >
         TELEGRAM
       </Button>
-      <Button onClick={() => changeLink("https://t.me/PYROKXNEZXZ_group")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://t.me/PYROKXNEZXZ_group")}
+      >
         TG CHAT
       </Button>
-      <Button onClick={() => changeLink("https://discord.gg/XWXDERj95x")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://discord.gg/XWXDERj95x")}
+      >
         DISCORD
       </Button>
-      <Button onClick={() => changeLink("https://vk.com/pyrokxnezxz_official")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://vk.com/rxdcodx_group")}
+      >
         VK GROUP
       </Button>
     </>

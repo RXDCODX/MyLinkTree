@@ -10,11 +10,26 @@ export const OtherBlock = () => {
   return (
     <>
       <h2>OTHER</h2>
-      <Button onClick={() => changeLink("https://shikimori.one/PYROKXNEZXZ")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://shikimori.one/PYROKXNEZXZ")}
+      >
         SHIKIMORI
       </Button>
-      <Button onClick={() => changeLink("https://github.com/Pyrok1nezyz")}>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://github.com/Pyrok1nezyz")}
+      >
         GIT HUB
+      </Button>
+      <Button
+        rel="noopener noreferrer"
+        target="_blank"
+        onClick={() => changeLink("https://t.me/pyrosbar")}
+      >
+        TGC 18+
       </Button>
     </>
   );

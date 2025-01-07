@@ -3,13 +3,13 @@ import { Button } from "react-bootstrap";
 
 export const DonateBlock = () => {
   const changeLink = useCallback(() => {
-    window.location.href = "https://www.donationalerts.com/r/pyrokxnezxz";
+    window.location.href = "https://www.donationalerts.com/r/rxdcodx";
   }, []);
 
   return (
     <>
       <h2>DONATE</h2>
-      <Button variant="primary" onClick={() => changeLink()}>
+      <Button target="_blank" variant="primary" onClick={() => changeLink()}>
         Donation Alerts
       </Button>
     </>

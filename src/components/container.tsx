@@ -13,7 +13,7 @@ export const MainContainer = () => {
         <Container className="main-container">
           <Col>
             <AvatarBlock />
-            <h1>AMURADZAKI'Z LINKTREE</h1>
+            <h1>RXDCODX LINKTREE</h1>
             <DonateBlock />
             <StreamsBlock />
             <SocialBlock />

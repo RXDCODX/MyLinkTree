@@ -1,5 +1,5 @@
 import { Image } from "react-bootstrap";
-import ava from "./ava.jpeg";
+import ava from "../../../public/ava.png";
 import "./block.scss";
 
 export const AvatarBlock = () => {
