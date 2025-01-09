@@ -4,6 +4,6 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/pyrok1nezyz.github.io",
+  base: "/MyLinkTree",
   plugins: [react(), viteSingleFile()],
 });

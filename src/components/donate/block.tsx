@@ -1,17 +1,12 @@
-import { useCallback } from "react";
-import { Button } from "react-bootstrap";
+import MyButton from "../MyButton/MyButton";
 
 export const DonateBlock = () => {
-  const changeLink = useCallback(() => {
-    window.location.href = "https://www.donationalerts.com/r/rxdcodx";
-  }, []);
-
   return (
     <>
       <h2>DONATE</h2>
-      <Button target="_blank" variant="primary" onClick={() => changeLink()}>
+      <MyButton link="https://www.donationalerts.com/r/rxdcodx">
         Donation Alerts
-      </Button>
+      </MyButton>
     </>
   );
 };

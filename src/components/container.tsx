@@ -9,7 +9,6 @@ import { StreamsBlock } from "./streams/block";
 export const MainContainer = () => {
   return (
     <>
-      <div className="parent-container">
         <Container className="main-container">
           <Col>
             <AvatarBlock />
@@ -20,7 +19,6 @@ export const MainContainer = () => {
             <OtherBlock />
           </Col>
         </Container>
-      </div>
     </>
   );
 };
