@@ -1,0 +1,80 @@
+name: Update Twitch Avatar & Nickname
+
+on:
+  schedule:
+    - cron: "0 0 */7 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  update-twitch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Yarn
+        uses: yarnpkg/setup-yarn@v2
+        with:
+          yarn-version: 4.6.0
+
+      - name: Get Twitch App Access Token
+        id: twitch-token
+        run: |
+          TOKEN_RESPONSE=$(curl -s -X POST "https://id.twitch.tv/oauth2/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "client_id=${{ secrets.TWITCH_CLIENT_ID }}&client_secret=${{ secrets.TWITCH_CLIENT_SECRET }}&grant_type=client_credentials")
+          ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.access_token')
+          echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch Twitch User Data
+        id: twitch-user
+        run: |
+          USER_DATA=$(curl -s -X GET "https://api.twitch.tv/helix/users?id=785975641" \
+            -H "Client-Id: ${{ secrets.TWITCH_CLIENT_ID }}" \
+            -H "Authorization: Bearer ${{ steps.twitch-token.outputs.access_token }}")
+          DISPLAY_NAME=$(echo "$USER_DATA" | jq -r '.data[0].display_name')
+          LOGIN=$(echo "$USER_DATA" | jq -r '.data[0].login')
+          PROFILE_IMAGE=$(echo "$USER_DATA" | jq -r '.data[0].profile_image_url')
+          echo "display_name=$DISPLAY_NAME" >> "$GITHUB_OUTPUT"
+          echo "login=$LOGIN" >> "$GITHUB_OUTPUT"
+          echo "profile_image_url=$PROFILE_IMAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Download Twitch Avatar
+        run: |
+          curl -s -o public/ava.png "${{ steps.twitch-user.outputs.profile_image_url }}"
+
+      - name: Update twitch.json
+        run: |
+          jq -n \
+            --arg login "${{ steps.twitch-user.outputs.login }}" \
+            --arg displayName "${{ steps.twitch-user.outputs.display_name }}" \
+            --arg profileImageUrl "${{ steps.twitch-user.outputs.profile_image_url }}" \
+            '{login: $login, displayName: $displayName, profileImageUrl: $profileImageUrl}' \
+            > src/data/twitch.json
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update Twitch avatar and nickname"
+          file_pattern: "public/ava.png src/data/twitch.json"
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
