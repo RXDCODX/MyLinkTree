@@ -4,8 +4,8 @@ export const DonateBlock = () => {
   return (
     <>
       <h2>DONATE</h2>
-      <MyButton link="https://www.donationalerts.com/r/rxdcodx">
-        Donation Alerts
+      <MyButton link="https://donatex.gg/donate/rxdcodx">
+        DonateX
       </MyButton>
     </>
   );
