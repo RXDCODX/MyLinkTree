@@ -32,30 +32,52 @@ jobs:
         id: config
         run: echo "login=$(jq -er '.twitch.login' links.json)" >> "$GITHUB_OUTPUT"
 
-      # Аватар и ник берём из og:image / og:title страницы канала на twitch.tv.
-      # Это тот же публичный HTML, который используют Discord и Telegram для
-      # превью ссылок, поэтому никаких client_id / client_secret не нужно.
+      # Аватар и ник берём из GQL Twitch — это тот же публичный client-id,
+      # что использует веб-плеер, поэтому client_secret не нужен.
+      # Если GQL не ответил, откатываемся на og:image со страницы канала
+      # (его же используют Discord и Telegram для превью ссылок).
       - name: Fetch Twitch profile
         id: twitch
+        env:
+          LOGIN: ${{ steps.config.outputs.login }}
+          GQL_CLIENT_ID: kimne78kx3ncx6brgo4mv6wki5h1ko
         run: |
-          PAGE=$(curl -fsSL --retry 3 "https://www.twitch.tv/${{ steps.config.outputs.login }}")
-          AVATAR=$(printf '%s' "$PAGE" \
-            | grep -o 'og:image" content="[^"]*"' \
-            | head -n 1 \
-            | sed -E 's/^og:image" content="(.*)"$/\1/')
-          TITLE=$(printf '%s' "$PAGE" \
-            | grep -o 'og:title" content="[^"]*"' \
-            | head -n 1 \
-            | sed -E 's/^og:title" content="(.*)"$/\1/')
+          set -euo pipefail
+
+          jq -n --arg login "$LOGIN" \
+            '{query: ("query{user(login:\"" + $login + "\"){displayName login profileImageURL(width:300)}}")}' \
+            > gql.json
+
+          RESPONSE=$(curl -fsSL -X POST "https://gql.twitch.tv/gql" \
+            -H "Client-ID: $GQL_CLIENT_ID" \
+            -H "Content-Type: application/json" \
+            --data-binary @gql.json || true)
+
+          DISPLAY_NAME=$(printf '%s' "$RESPONSE" | jq -r '.data.user.displayName // empty' || true)
+          AVATAR=$(printf '%s' "$RESPONSE" | jq -r '.data.user.profileImageURL // empty' || true)
 
           if [ -z "$AVATAR" ]; then
-            echo "::error::Канал ${{ steps.config.outputs.login }} не найден или у него нет аватарки"
+            echo "GQL не ответил, пробуем og:image"
+            PAGE=$(curl -fsSL --retry 3 "https://www.twitch.tv/$LOGIN" || true)
+            AVATAR=$(printf '%s' "$PAGE" \
+              | grep -o 'og:image" content="[^"]*"' \
+              | head -n 1 \
+              | sed -E 's/^og:image" content="(.*)"$/\1/' || true)
+            TITLE=$(printf '%s' "$PAGE" \
+              | grep -o 'og:title" content="[^"]*"' \
+              | head -n 1 \
+              | sed -E 's/^og:title" content="(.*)"$/\1/' || true)
+            DISPLAY_NAME=$(printf '%s' "$TITLE" | sed -E 's/[[:space:]]*-[[:space:]]*Twitch$//' || true)
+          fi
+
+          if [ -z "$AVATAR" ]; then
+            echo "::error::Не удалось получить аватар для $LOGIN"
             exit 1
           fi
 
-          DISPLAY_NAME=$(printf '%s' "$TITLE" | sed -E 's/[[:space:]]*-[[:space:]]*Twitch$//')
+          DISPLAY_NAME=${DISPLAY_NAME:-$LOGIN}
           {
-            echo "display_name=${DISPLAY_NAME:-${{ steps.config.outputs.login }}}"
+            echo "display_name=$DISPLAY_NAME"
             echo "avatar_url=$AVATAR"
           } >> "$GITHUB_OUTPUT"
 
