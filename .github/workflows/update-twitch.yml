@@ -97,12 +97,22 @@ jobs:
             links.json > links.json.tmp
           mv links.json.tmp links.json
 
+      # Кладём картинку в репозиторий, а не тянем её в браузере с CDN —
+      # иначе на первом кадре видно старую/заглушку аватарки.
+      - name: Download avatar
+        if: github.event_name != 'push'
+        run: |
+          mkdir -p public
+          curl -fsSL --retry 3 "${{ steps.twitch.outputs.avatar_url }}" -o public/ava.png
+          ls -l public/ava.png
+          file public/ava.png
+
       - name: Commit and Push Changes
         if: github.event_name != 'push'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update Twitch avatar and nickname"
-          file_pattern: links.json
+          file_pattern: links.json public/ava.png
 
       - name: Install Dependencies
         run: yarn install --immutable

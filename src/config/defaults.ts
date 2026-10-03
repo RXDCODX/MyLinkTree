@@ -3,7 +3,7 @@ import type { SiteConfig } from "./types";
 export const defaultConfig: SiteConfig = {
   profile: {
     title: "RXDCODX LINKTREE",
-    avatarUrl: "",
+    avatarUrl: "ava.png",
     border: {
       color: "#ff1f1f",
       speed: 1,
