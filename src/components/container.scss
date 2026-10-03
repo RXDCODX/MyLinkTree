@@ -1,5 +1,18 @@
 $main-color: red;
 $second-color: white;
+$outline-color: #000;
+$outline-width: 3px;
+$button-border: #ff1f1f;
+$button-bg: rgb(26 26 26 / 80%);
+$button-bg-hover: #c00000;
+
+// bootstrap.css не подключается, поэтому box-sizing надо задать самим —
+// иначе `width` в процентах вместе с padding вылезает за родителя.
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 :root {
   text-wrap: balance;
@@ -7,7 +20,7 @@ $second-color: white;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
+  color-scheme: dark;
   color: $main-color;
   font-synthesis: none;
   text-rendering: optimizelegibility;
@@ -15,69 +28,141 @@ $second-color: white;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.main-container {
+body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 13%; 
-  right: 50%;
-  transform: translate(50%, 0);
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background-color: black;
+}
+
+.main-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 620px;
+  padding: 6vh 1rem 8vh;
 }
 
 h1,
 h2,
-div.col {
+div.col,
+.link-group {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  max-width: 100%;
 }
 
-h2 {
-  margin-top: 1.8em;
+div.col {
+  width: 100%;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: black;
+/* Чёрная обводка вокруг всего текста, чтобы он читался на матрице. */
+h1,
+h2,
+a {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  paint-order: stroke fill;
+
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-text-stroke: $outline-width $outline-color;
+  text-shadow:
+    -2px -2px 0 $outline-color,
+    2px -2px 0 $outline-color,
+    -2px 2px 0 $outline-color,
+    2px 2px 0 $outline-color;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  margin: 0.6em 0 0;
+  font-size: clamp(1.7rem, 7vw, 2.6rem);
+  line-height: 1.15;
+  text-shadow:
+    -2px -2px 0 $outline-color,
+    2px -2px 0 $outline-color,
+    -2px 2px 0 $outline-color,
+    2px 2px 0 $outline-color,
+    0 0 18px rgb(255 0 0 / 55%);
+}
+
+h2 {
+  margin: 1.8em 0 0.2em;
+  font-size: 1.1em;
+  letter-spacing: 0.22em;
+  opacity: 0.85;
+}
+
+.link-group {
+  width: 100%;
 }
 
 a {
-  border-radius: 8px;
-  border: 0.5px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 150%;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  border-color: tomato;
-  color: whitesmoke;
-  margin-bottom: 0.4em;
+  display: inline-flex;
+  gap: 0.7em;
+  align-items: center;
+  justify-content: center;
   width: 95%;
-  cursor: pointer;
-  transition: border-color 0.25s;
-  text-decoration: inherit;
+  margin-bottom: 0.4em;
+  padding: 0.6em 1.2em;
+  border: 1px solid $button-border;
+  border-radius: 8px;
+  background-color: $button-bg;
+  color: whitesmoke;
+  font-family: inherit;
+  font-size: clamp(1rem, 4.5vw, 1.5rem);
   font-weight: 500;
+  text-decoration: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition:
+    background-color 0.25s,
+    box-shadow 0.25s;
 
+  /* Бордер намеренно не меняется при наведении. */
   &:hover {
-    border-color: $second-color;
-    background-color: $main-color;
+    border-color: $button-border;
+    background-color: $button-bg-hover;
+    box-shadow: 0 0 18px rgb(255 0 0 / 45%);
   }
 
   &:focus,
   &:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+/* Иконки раскидываются к боковым границам, подпись остаётся по центру. */
+.my-button {
+  justify-content: space-between;
+  padding-inline: 1em;
+}
+
+.my-button-label {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.my-button-icon {
+  flex: 0 0 auto;
+  width: 1.15em;
+  height: 1.15em;
+}
+
+@media (width <= 480px) {
+  h1,
+  h2,
+  a {
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-text-stroke-width: 2px;
   }
 }
 
@@ -91,12 +176,12 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: $main-color;
   border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
   background-color: $main-color;
+
+  &:hover {
+    background-color: $main-color;
+  }
 }
 
 ::-webkit-scrollbar-track {

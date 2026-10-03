@@ -5,5 +5,5 @@ import { MainContainer } from "./components/container.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MainContainer />
-  </StrictMode>
+  </StrictMode>,
 );

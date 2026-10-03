@@ -1,0 +1,88 @@
+$eb-color: #ff1f1f;
+$eb-light-color: #ffb3b3;
+
+.electric-border {
+  --eb-border-width: 2px;
+  --eb-light-color: #{$eb-light-color};
+  --eb-color: #{$eb-color};
+
+  // Насколько слой молнии выходит за габариты содержимого (в px).
+  --eb-outset: 0px;
+
+  position: relative;
+  border-radius: inherit;
+  overflow: visible;
+  isolation: isolate;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+  .electric-border {
+    --eb-light-color: oklch(from var(--electric-border-color) l c h);
+  }
+}
+
+.eb-svg {
+  position: fixed;
+  top: -10000px;
+  left: -10000px;
+  width: 10px;
+  height: 10px;
+  opacity: 0.001;
+  pointer-events: none;
+}
+
+.eb-content {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.eb-layers {
+  position: absolute;
+  inset: var(--eb-outset, 0);
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.eb-stroke,
+.eb-glow-1,
+.eb-glow-2,
+.eb-background-glow {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.eb-stroke {
+  border: var(--eb-border-width) solid
+    var(--electric-border-color, var(--eb-color));
+}
+
+.eb-glow-1 {
+  border: var(--eb-border-width) solid
+    var(--electric-border-color, var(--eb-color));
+  opacity: 0.5;
+  filter: blur(calc(0.5px + (var(--eb-border-width) * 0.25)));
+}
+
+.eb-glow-2 {
+  border: var(--eb-border-width) solid var(--eb-light-color);
+  opacity: 0.5;
+  filter: blur(calc(2px + (var(--eb-border-width) * 0.5)));
+}
+
+.eb-background-glow {
+  z-index: -1;
+  background: linear-gradient(
+    -30deg,
+    var(--eb-light-color),
+    transparent,
+    var(--electric-border-color, var(--eb-color))
+  );
+  opacity: 0.3;
+  filter: blur(32px);
+  transform: scale(1.08);
+}

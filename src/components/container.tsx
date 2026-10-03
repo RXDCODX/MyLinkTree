@@ -1,24 +1,25 @@
 import { Col, Container } from "react-bootstrap";
-import { DonateBlock } from "./donate/block";
-import { SocialBlock } from "./socials/block";
-import "./container.scss";
-import { OtherBlock } from "./other/block";
+import { LinkGroup } from "./LinkGroup/LinkGroup";
+import { MatrixBackground } from "./MatrixBackground/MatrixBackground";
 import { AvatarBlock } from "./avatar/block";
-import { StreamsBlock } from "./streams/block";
+import { useSiteConfig } from "../config/useSiteConfig";
+import "./container.scss";
 
 export const MainContainer = () => {
+  const { config } = useSiteConfig();
+
   return (
     <>
-        <Container className="main-container">
-          <Col>
-            <AvatarBlock />
-            <h1>RXDCODX LINKTREE</h1>
-            <DonateBlock />
-            <StreamsBlock />
-            <SocialBlock />
-            <OtherBlock />
-          </Col>
-        </Container>
+      <MatrixBackground config={config.background.matrix} />
+      <Container className="main-container">
+        <Col>
+          <AvatarBlock profile={config.profile} twitch={config.twitch} />
+          <h1>{config.profile.title}</h1>
+          {config.groups.map((group) => (
+            <LinkGroup key={group.id} group={group} />
+          ))}
+        </Col>
+      </Container>
     </>
   );
 };

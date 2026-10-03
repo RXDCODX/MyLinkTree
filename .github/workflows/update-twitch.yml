@@ -3,11 +3,13 @@ name: Update Twitch Avatar & Nickname
 on:
   schedule:
     - cron: "0 0 */7 * *"
+  push:
+    branches: [main]
+    paths: [links.json]
   workflow_dispatch:
 
 permissions:
   contents: write
-  pages: write
 
 jobs:
   update-twitch:
@@ -22,50 +24,63 @@ jobs:
           node-version: 20
 
       - name: Setup Yarn
-        uses: yarnpkg/setup-yarn@v2
-        with:
-          yarn-version: 4.6.0
-
-      - name: Get Twitch App Access Token
-        id: twitch-token
         run: |
-          TOKEN_RESPONSE=$(curl -s -X POST "https://id.twitch.tv/oauth2/token" \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "client_id=${{ secrets.TWITCH_CLIENT_ID }}&client_secret=${{ secrets.TWITCH_CLIENT_SECRET }}&grant_type=client_credentials")
-          ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.access_token')
-          echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
+          corepack enable
+          yarn --version
 
-      - name: Fetch Twitch User Data
-        id: twitch-user
-        run: |
-          USER_DATA=$(curl -s -X GET "https://api.twitch.tv/helix/users?id=785975641" \
-            -H "Client-Id: ${{ secrets.TWITCH_CLIENT_ID }}" \
-            -H "Authorization: Bearer ${{ steps.twitch-token.outputs.access_token }}")
-          DISPLAY_NAME=$(echo "$USER_DATA" | jq -r '.data[0].display_name')
-          LOGIN=$(echo "$USER_DATA" | jq -r '.data[0].login')
-          PROFILE_IMAGE=$(echo "$USER_DATA" | jq -r '.data[0].profile_image_url')
-          echo "display_name=$DISPLAY_NAME" >> "$GITHUB_OUTPUT"
-          echo "login=$LOGIN" >> "$GITHUB_OUTPUT"
-          echo "profile_image_url=$PROFILE_IMAGE" >> "$GITHUB_OUTPUT"
+      - name: Read login from links.json
+        id: config
+        run: echo "login=$(jq -er '.twitch.login' links.json)" >> "$GITHUB_OUTPUT"
 
-      - name: Download Twitch Avatar
+      # Аватар и ник берём из og:image / og:title страницы канала на twitch.tv.
+      # Это тот же публичный HTML, который используют Discord и Telegram для
+      # превью ссылок, поэтому никаких client_id / client_secret не нужно.
+      - name: Fetch Twitch profile
+        id: twitch
         run: |
-          curl -s -o public/ava.png "${{ steps.twitch-user.outputs.profile_image_url }}"
+          PAGE=$(curl -fsSL --retry 3 "https://www.twitch.tv/${{ steps.config.outputs.login }}")
+          AVATAR=$(printf '%s' "$PAGE" \
+            | grep -o 'og:image" content="[^"]*"' \
+            | head -n 1 \
+            | sed -E 's/^og:image" content="(.*)"$/\1/')
+          TITLE=$(printf '%s' "$PAGE" \
+            | grep -o 'og:title" content="[^"]*"' \
+            | head -n 1 \
+            | sed -E 's/^og:title" content="(.*)"$/\1/')
 
-      - name: Update twitch.json
+          if [ -z "$AVATAR" ]; then
+            echo "::error::Канал ${{ steps.config.outputs.login }} не найден или у него нет аватарки"
+            exit 1
+          fi
+
+          DISPLAY_NAME=$(printf '%s' "$TITLE" | sed -E 's/[[:space:]]*-[[:space:]]*Twitch$//')
+          {
+            echo "display_name=${DISPLAY_NAME:-${{ steps.config.outputs.login }}}"
+            echo "avatar_url=$AVATAR"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "display_name=$DISPLAY_NAME"
+          echo "avatar_url=$AVATAR"
+
+      - name: Update links.json
+        if: github.event_name != 'push'
         run: |
-          jq -n \
-            --arg login "${{ steps.twitch-user.outputs.login }}" \
-            --arg displayName "${{ steps.twitch-user.outputs.display_name }}" \
-            --arg profileImageUrl "${{ steps.twitch-user.outputs.profile_image_url }}" \
-            '{login: $login, displayName: $displayName, profileImageUrl: $profileImageUrl}' \
-            > src/data/twitch.json
+          jq \
+            --arg login "${{ steps.config.outputs.login }}" \
+            --arg displayName "${{ steps.twitch.outputs.display_name }}" \
+            --arg avatarUrl "${{ steps.twitch.outputs.avatar_url }}" \
+            '.twitch.login = $login
+             | .twitch.displayName = $displayName
+             | .twitch.avatarUrl = $avatarUrl' \
+            links.json > links.json.tmp
+          mv links.json.tmp links.json
 
       - name: Commit and Push Changes
+        if: github.event_name != 'push'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update Twitch avatar and nickname"
-          file_pattern: "public/ava.png src/data/twitch.json"
+          file_pattern: links.json
 
       - name: Install Dependencies
         run: yarn install --immutable
