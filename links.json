@@ -1,4 +1,22 @@
 {
+  "site": {
+    "url": "https://rxdcodx.ru",
+    "lang": "ru",
+    "locale": "ru_RU",
+    "author": "RXDCODX",
+    "themeColor": "#ff1f1f",
+    "description": "Все мои ссылки в одном месте: Twitch, Telegram, Discord, VK, GitHub, Shikimori и донат.",
+    "keywords": [
+      "rxdcodx",
+      "twitch",
+      "telegram",
+      "discord",
+      "donate",
+      "ссылки"
+    ],
+    "twitterSite": "@rxdcodx",
+    "ogImage": "ava.png"
+  },
   "profile": {
     "title": "RXDCODX LINKTREE",
     "avatarUrl": "ava.png",
