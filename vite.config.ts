@@ -1,8 +1,8 @@
+import react from "@vitejs/plugin-react";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
 import type { Plugin } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 
 const CONFIG_FILE = "links.json";
@@ -41,11 +41,14 @@ const escapeHtml = (value: string): string =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
-const attribute = (value: string): string => escapeHtml(value).replace(/\n/g, " ");
+const attribute = (value: string): string =>
+  escapeHtml(value).replace(/\n/g, " ");
 
 /** Относительный путь превращаем в абсолютный — соцсети требуют полный URL. */
 const absoluteUrl = (origin: string, value: string): string =>
-  /^https?:\/\//i.test(value) ? value : `${origin}/${value.replace(/^\/+/, "")}`;
+  /^https?:\/\//i.test(value)
+    ? value
+    : `${origin}/${value.replace(/^\/+/, "")}`;
 
 const readSeoConfig = (): SeoConfig =>
   JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8")) as SeoConfig;
@@ -93,7 +96,9 @@ const buildHeadTags = (config: SeoConfig): string => {
   );
 
   if (site.twitterSite) {
-    tags.push(`    <meta name="twitter:site" content="${attribute(site.twitterSite)}" />`);
+    tags.push(
+      `    <meta name="twitter:site" content="${attribute(site.twitterSite)}" />`,
+    );
   }
 
   tags.push(
@@ -163,13 +168,20 @@ function siteConfig(): Plugin {
     transformIndexHtml: {
       order: "pre",
       handler(html) {
-        return html.replace("</head>", `  ${buildHeadTags(readSeoConfig())}\n  </head>`);
+        return html.replace(
+          "</head>",
+          `  ${buildHeadTags(readSeoConfig())}\n  </head>`,
+        );
       },
     },
     generateBundle() {
       const origin = readSeoConfig().site.url.replace(/\/+$/, "");
 
-      this.emitFile({ type: "asset", fileName: CONFIG_FILE, source: readConfig() });
+      this.emitFile({
+        type: "asset",
+        fileName: CONFIG_FILE,
+        source: readConfig(),
+      });
 
       this.emitFile({
         type: "asset",

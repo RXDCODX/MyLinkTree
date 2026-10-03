@@ -1,6 +1,10 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef } from "react";
+﻿import { useCallback, useEffect, useId, useLayoutEffect, useRef } from "react";
 import type { CSSProperties, PropsWithChildren } from "react";
 import "./ElectricBorder.scss";
+
+// useLayoutEffect ругается во время пре-рендера на сервере, где layout нет.
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 type ElectricBorderProperties = PropsWithChildren<{
   color?: string;
@@ -104,7 +108,7 @@ const ElectricBorder = ({
     updateAnim();
   }, [updateAnim]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!rootReference.current) return;
     const ro = new ResizeObserver(() => updateAnim());
     ro.observe(rootReference.current);

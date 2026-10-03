@@ -41,6 +41,12 @@ export interface MatrixConfig {
   blur: number;
 }
 
+export interface TitleMarqueeConfig {
+  enabled: boolean;
+  speed: number;
+  separator: string;
+}
+
 export interface SiteInfo {
   url: string;
   lang: string;
@@ -51,6 +57,7 @@ export interface SiteInfo {
   keywords: string[];
   twitterSite: string;
   ogImage: string;
+  titleMarquee: TitleMarqueeConfig;
 }
 
 export interface SiteConfig {

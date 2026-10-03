@@ -15,7 +15,12 @@
       "ссылки"
     ],
     "twitterSite": "@rxdcodx",
-    "ogImage": "ava.png"
+    "ogImage": "ava.png",
+    "titleMarquee": {
+      "enabled": true,
+      "speed": 260,
+      "separator": " • "
+    }
   },
   "profile": {
     "title": "RXDCODX LINKTREE",

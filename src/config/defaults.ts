@@ -11,6 +11,11 @@ export const defaultConfig: SiteConfig = {
     keywords: [],
     twitterSite: "",
     ogImage: "ava.png",
+    titleMarquee: {
+      enabled: true,
+      speed: 260,
+      separator: " • ",
+    },
   },
   profile: {
     title: "RXDCODX LINKTREE",

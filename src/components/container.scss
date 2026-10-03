@@ -5,6 +5,7 @@ $outline-width: 3px;
 $button-border: #ff1f1f;
 $button-bg: rgb(26 26 26 / 80%);
 $button-bg-hover: #c00000;
+$heading-color: #fff;
 
 // bootstrap.css не подключается, поэтому box-sizing надо задать самим —
 // иначе `width` в процентах вместе с padding вылезает за родителя.
@@ -96,9 +97,15 @@ h1 {
 
 h2 {
   margin: 1.8em 0 0.2em;
+  color: $heading-color;
   font-size: 1.1em;
   letter-spacing: 0.22em;
-  opacity: 0.85;
+  text-shadow:
+    -2px -2px 0 $outline-color,
+    2px -2px 0 $outline-color,
+    -2px 2px 0 $outline-color,
+    2px 2px 0 $outline-color,
+    0 0 14px rgb(255 77 109 / 45%);
 }
 
 .link-group {
