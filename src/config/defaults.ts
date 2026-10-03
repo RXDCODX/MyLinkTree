@@ -1,6 +1,17 @@
 import type { SiteConfig } from "./types";
 
 export const defaultConfig: SiteConfig = {
+  site: {
+    url: "https://rxdcodx.ru",
+    lang: "ru",
+    locale: "ru_RU",
+    author: "RXDCODX",
+    themeColor: "#ff1f1f",
+    description: "Все мои ссылки в одном месте.",
+    keywords: [],
+    twitterSite: "",
+    ogImage: "ava.png",
+  },
   profile: {
     title: "RXDCODX LINKTREE",
     avatarUrl: "ava.png",

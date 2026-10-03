@@ -41,7 +41,20 @@ export interface MatrixConfig {
   blur: number;
 }
 
+export interface SiteInfo {
+  url: string;
+  lang: string;
+  locale: string;
+  author: string;
+  themeColor: string;
+  description: string;
+  keywords: string[];
+  twitterSite: string;
+  ogImage: string;
+}
+
 export interface SiteConfig {
+  site: SiteInfo;
   profile: ProfileConfig;
   twitch: TwitchConfig;
   background: {

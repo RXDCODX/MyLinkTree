@@ -7,6 +7,7 @@ import type {
   MatrixConfig,
   ProfileConfig,
   SiteConfig,
+  SiteInfo,
   TwitchConfig,
   ConfigStatus,
 } from "./types";
@@ -42,6 +43,23 @@ const normalizeBorder = (
     speed: Math.max(0.1, asNumber(raw.speed, fallback.speed)),
     chaos: Math.max(0, asNumber(raw.chaos, fallback.chaos)),
     thickness: Math.max(1, asNumber(raw.thickness, fallback.thickness)),
+  };
+};
+
+const normalizeSite = (value: unknown, fallback: SiteInfo): SiteInfo => {
+  const raw = asRecord(value);
+  return {
+    url: asString(raw.url, fallback.url).replace(/\/+$/, ""),
+    lang: asString(raw.lang, fallback.lang),
+    locale: asString(raw.locale, fallback.locale),
+    author: asString(raw.author, fallback.author),
+    themeColor: asString(raw.themeColor, fallback.themeColor),
+    description: asString(raw.description, fallback.description),
+    keywords: asArray(raw.keywords)
+      .map((item) => (typeof item === "string" ? item : ""))
+      .filter((item) => item !== ""),
+    twitterSite: asString(raw.twitterSite, fallback.twitterSite),
+    ogImage: asString(raw.ogImage, fallback.ogImage),
   };
 };
 
@@ -124,6 +142,7 @@ export const normalizeConfig = (value: unknown): SiteConfig => {
   const fallback = defaultConfig;
 
   return {
+    site: normalizeSite(raw.site, fallback.site),
     profile: normalizeProfile(raw.profile, fallback.profile),
     twitch: normalizeTwitch(raw.twitch, fallback.twitch),
     background: {
