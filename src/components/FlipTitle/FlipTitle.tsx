@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { TitleFlipConfig } from "../../config/types";
 import "./FlipTitle.scss";
 
@@ -17,27 +17,17 @@ export const FlipTitle = ({ title, flip }: Props) => {
   const [flipped, setFlipped] = useState(false);
   const active = flip.enabled && flip.back !== "";
 
-  useEffect(() => {
-    if (!active) {
-      setFlipped(false);
-      return;
-    }
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
-    const timer = window.setInterval(() => {
-      if (!document.hidden) setFlipped((value) => !value);
-    }, flip.interval);
-
-    return () => window.clearInterval(timer);
-  }, [active, flip.interval]);
+  const firstWord = title.split(/\s+/, 1)[0] || title;
+  const suffix = title.slice(firstWord.length);
 
   if (!active) return <h1>{title}</h1>;
 
   return (
-    <h1 className="flip-title">
+    <h1
+      className="flip-title"
+      onMouseEnter={() => setFlipped(true)}
+      onMouseLeave={() => setFlipped(false)}
+    >
       <span
         className={`flip-title__cube${flipped ? " flip-title__cube--flipped" : ""}`}
       >
@@ -51,6 +41,7 @@ export const FlipTitle = ({ title, flip }: Props) => {
           {flip.back}
         </span>
       </span>
+      <span className="flip-title__suffix">{suffix}</span>
     </h1>
   );
 };

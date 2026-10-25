@@ -7,6 +7,14 @@ $face-depth: 0.58em;
 $line-height: 1.15;
 
 .flip-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 0.25em;
+
   margin: 0.6em 0 0;
   line-height: $line-height;
   perspective: 700px;
@@ -15,7 +23,7 @@ $line-height: 1.15;
 
 .flip-title__cube {
   position: relative;
-  display: block;
+  display: inline-block;
   transform-style: preserve-3d;
   transition: transform $flip-duration $flip-ease;
   will-change: transform;
@@ -56,4 +64,8 @@ $line-height: 1.15;
   .flip-title__cube {
     transition: none;
   }
+}
+
+.flip-title__suffix {
+  white-space: nowrap;
 }

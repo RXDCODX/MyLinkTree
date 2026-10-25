@@ -151,11 +151,17 @@ function siteConfig(): Plugin {
     name: "site-config",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        const [pathname] = (req.url ?? "").split("?");
-        if (pathname !== `/${CONFIG_FILE}`) {
+        const url = new URL(req.url ?? "/", "http://localhost");
+
+        // Импорты модулей должен обрабатывать сам Vite.
+        if (
+          url.pathname !== `/${CONFIG_FILE}` ||
+          url.searchParams.has("import")
+        ) {
           next();
           return;
         }
+
         try {
           res.setHeader("Content-Type", "application/json; charset=utf-8");
           res.setHeader("Cache-Control", "no-store");

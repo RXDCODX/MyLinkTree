@@ -1,11 +1,11 @@
 import { Col, Container } from "react-bootstrap";
-import { LinkGroup } from "./LinkGroup/LinkGroup";
-import { MatrixBackground } from "./MatrixBackground/MatrixBackground";
-import { AvatarBlock } from "./avatar/block";
-import { FlipTitle } from "./FlipTitle/FlipTitle";
 import { useSiteConfig } from "../config/useSiteConfig";
 import { useTitleMarquee } from "../hooks/useTitleMarquee";
+import { AvatarBlock } from "./avatar/block";
 import "./container.scss";
+import { FlipTitle } from "./FlipTitle/FlipTitle";
+import { LinkGroup } from "./LinkGroup/LinkGroup";
+import { MatrixBackground } from "./MatrixBackground/MatrixBackground";
 
 export const MainContainer = () => {
   const { config } = useSiteConfig();
