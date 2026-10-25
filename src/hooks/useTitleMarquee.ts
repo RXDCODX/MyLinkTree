@@ -32,9 +32,7 @@ export const useTitleMarquee = (
     };
 
     tick();
-    const timer = window.setInterval(() => {
-      if (!document.hidden) tick();
-    }, config.speed);
+    const timer = window.setInterval(tick, config.speed);
 
     return () => {
       window.clearInterval(timer);
