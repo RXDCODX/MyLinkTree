@@ -6,8 +6,6 @@
   "homepage": "rxdcodx.github.io/MyLinkTree",
   "scripts": {
     "dev": "vite",
-    "predeploy": "yarn vite build",
-    "deploy": "gh-pages -d dist",
     "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "preview": "vite start",
     "stylelint": "stylelint \"src/**/*.{css,scss}\" --quiet --fix",
@@ -35,7 +33,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-    "@types/gh-pages": "^6",
     "@types/node": "^22",
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
