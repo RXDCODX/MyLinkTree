@@ -16,8 +16,16 @@ export interface BorderConfig {
   thickness: number;
 }
 
+export interface TitleFlipConfig {
+  enabled: boolean;
+  front: string;
+  back: string;
+  interval: number;
+}
+
 export interface ProfileConfig {
   title: string;
+  titleFlip: TitleFlipConfig;
   avatarUrl: string;
   border: BorderConfig;
 }

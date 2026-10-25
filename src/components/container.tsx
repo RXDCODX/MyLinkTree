@@ -2,6 +2,7 @@ import { Col, Container } from "react-bootstrap";
 import { LinkGroup } from "./LinkGroup/LinkGroup";
 import { MatrixBackground } from "./MatrixBackground/MatrixBackground";
 import { AvatarBlock } from "./avatar/block";
+import { FlipTitle } from "./FlipTitle/FlipTitle";
 import { useSiteConfig } from "../config/useSiteConfig";
 import { useTitleMarquee } from "../hooks/useTitleMarquee";
 import "./container.scss";
@@ -17,7 +18,10 @@ export const MainContainer = () => {
       <Container className="main-container">
         <Col>
           <AvatarBlock profile={config.profile} twitch={config.twitch} />
-          <h1>{config.profile.title}</h1>
+          <FlipTitle
+            title={config.profile.title}
+            flip={config.profile.titleFlip}
+          />
           {config.groups.map((group) => (
             <LinkGroup key={group.id} group={group} />
           ))}

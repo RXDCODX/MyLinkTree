@@ -7,6 +7,7 @@ import type {
   ProfileConfig,
   SiteConfig,
   SiteInfo,
+  TitleFlipConfig,
   TitleMarqueeConfig,
   TwitchConfig,
 } from "./types";
@@ -75,6 +76,22 @@ export const normalizeSite = (value: unknown, fallback: SiteInfo): SiteInfo => {
   };
 };
 
+export const normalizeTitleFlip = (
+  value: unknown,
+  fallback: TitleFlipConfig,
+): TitleFlipConfig => {
+  const raw = asRecord(value);
+  return {
+    enabled: asBoolean(raw.enabled, fallback.enabled),
+    front: asString(raw.front, fallback.front),
+    back: asString(raw.back, fallback.back),
+    interval: Math.min(
+      20000,
+      Math.max(1500, asNumber(raw.interval, fallback.interval)),
+    ),
+  };
+};
+
 export const normalizeProfile = (
   value: unknown,
   fallback: ProfileConfig,
@@ -82,6 +99,7 @@ export const normalizeProfile = (
   const raw = asRecord(value);
   return {
     title: asString(raw.title, fallback.title),
+    titleFlip: normalizeTitleFlip(raw.titleFlip, fallback.titleFlip),
     avatarUrl: asString(raw.avatarUrl, fallback.avatarUrl),
     border: normalizeBorder(raw.border, fallback.border),
   };

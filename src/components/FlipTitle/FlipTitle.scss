@@ -1,0 +1,59 @@
+$outline-color: #000;
+$flip-duration: 900ms;
+$flip-ease: cubic-bezier(0.76, 0, 0.24, 1);
+
+// Половина высоты строки: на столько грани выносятся из центра кубика.
+$face-depth: 0.58em;
+$line-height: 1.15;
+
+.flip-title {
+  margin: 0.6em 0 0;
+  line-height: $line-height;
+  perspective: 700px;
+  perspective-origin: 50% 50%;
+}
+
+.flip-title__cube {
+  position: relative;
+  display: block;
+  transform-style: preserve-3d;
+  transition: transform $flip-duration $flip-ease;
+  will-change: transform;
+}
+
+.flip-title__cube--flipped {
+  transform: rotateX(-90deg);
+}
+
+.flip-title__face {
+  display: block;
+  white-space: nowrap;
+  backface-visibility: hidden;
+}
+
+.flip-title__face--front {
+  transform: translateZ($face-depth);
+}
+
+/* Верхняя грань кубика: при повороте на -90° встаёт на место передней. */
+.flip-title__face--back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #fff;
+  transform: rotateX(90deg) translateZ($face-depth);
+  text-shadow:
+    -2px -2px 0 $outline-color,
+    2px -2px 0 $outline-color,
+    -2px 2px 0 $outline-color,
+    2px 2px 0 $outline-color;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-title__cube {
+    transition: none;
+  }
+}

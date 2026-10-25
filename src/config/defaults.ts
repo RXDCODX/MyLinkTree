@@ -19,6 +19,12 @@ export const defaultConfig: SiteConfig = {
   },
   profile: {
     title: "RXDCODX LINKTREE",
+    titleFlip: {
+      enabled: true,
+      front: "RXDCODX",
+      back: "REDCODE",
+      interval: 4000,
+    },
     avatarUrl: "ava.png",
     border: {
       color: "#ff1f1f",
