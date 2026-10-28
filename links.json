@@ -1,0 +1,118 @@
+{
+  "site": {
+    "url": "https://rxdcodx.ru",
+    "lang": "ru",
+    "locale": "ru_RU",
+    "author": "RXDCODX",
+    "themeColor": "#ff1f1f",
+    "description": "Все мои ссылки в одном месте: Twitch, Telegram, Discord, VK, GitHub, Shikimori и донат.",
+    "keywords": [
+      "rxdcodx",
+      "twitch",
+      "telegram",
+      "discord",
+      "donate",
+      "ссылки"
+    ],
+    "twitterSite": "@rxdcodx",
+    "ogImage": "ava.png",
+    "titleMarquee": {
+      "enabled": true,
+      "speed": 260,
+      "separator": " • "
+    }
+  },
+  "profile": {
+    "title": "RXDCODX LINKTREE",
+    "titleFlip": {
+      "enabled": true,
+      "front": "RXDCODX",
+      "back": "REDCODE",
+      "interval": 4000
+    },
+    "avatarUrl": "ava.png",
+    "border": {
+      "color": "#ff1f1f",
+      "speed": 1,
+      "chaos": 1,
+      "thickness": 3
+    }
+  },
+  "twitch": {
+    "login": "rxdcodx",
+    "displayName": "RXDCODX",
+    "avatarUrl": "https://static-cdn.jtvnw.net/jtv_user_pictures/23005ab9-7c2f-45ce-9ffd-c7152a68919e-profile_image-300x300.png"
+  },
+  "background": {
+    "matrix": {
+      "enabled": true,
+      "glyphColor": "#ff0000",
+      "trailColor": "#2b0000",
+      "headColor": "#ffd9d9",
+      "fontSize": 18,
+      "fallSpeed": 8,
+      "raindropLength": 40,
+      "cycleSpeed": 0.06,
+      "opacity": 0.55,
+      "blur": 1.8
+    }
+  },
+  "groups": [
+    {
+      "id": "donate",
+      "title": "DONATE",
+      "links": [
+        {
+          "label": "DonateX",
+          "url": "https://donatex.gg/donate/rxdcodx"
+        },
+        {
+          "label": "BOOSTY",
+          "url": "https://donatex.gg/donate/rxdcodx"
+        }
+      ]
+    },
+    {
+      "id": "streams",
+      "title": "STREAMS",
+      "links": [
+        {
+          "label": "RXDCODX",
+          "url": "https://twitch.tv/rxdcodx"
+        }
+      ]
+    },
+    {
+      "id": "socials",
+      "title": "SOCIALS",
+      "links": [
+        {
+          "label": "TELEGRAM",
+          "url": "https://t.me/rxdcodx"
+        },
+        {
+          "label": "Send Message",
+          "url": "https://t.me/rxdcodx?direct"
+        },
+        {
+          "label": "TG ANIME ARTS",
+          "url": "https://t.me/mikukode"
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "OTHER",
+      "links": [
+        {
+          "label": "SHIKIMORI",
+          "url": "https://shikimori.one/PYROKXNEZXZ"
+        },
+        {
+          "label": "GIT HUB",
+          "url": "https://github.com/rxdcodx"
+        }
+      ]
+    }
+  ]
+}
