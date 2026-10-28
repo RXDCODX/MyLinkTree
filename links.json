@@ -65,6 +65,10 @@
         {
           "label": "DonateX",
           "url": "https://donatex.gg/donate/rxdcodx"
+        },
+        {
+          "label": "BOOSTY",
+          "url": "https://donatex.gg/donate/rxdcodx"
         }
       ]
     },
@@ -84,7 +88,15 @@
       "links": [
         {
           "label": "TELEGRAM",
-          "url": "https://t.me/+0Ke1SSkA8b1kNGYy"
+          "url": "https://t.me/rxdcodx"
+        },
+        {
+          "label": "Send Message",
+          "url": "https://t.me/rxdcodx?direct"
+        },
+        {
+          "label": "TG ANIME ARTS",
+          "url": "https://t.me/mikukode"
         }
       ]
     },
