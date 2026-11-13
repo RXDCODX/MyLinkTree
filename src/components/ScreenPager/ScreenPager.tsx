@@ -25,14 +25,19 @@ export const ScreenPager = ({ screens }: Props) => {
     const handleWheel = (event: WheelEvent) => {
       if (event.deltaY === 0 || screens.length < 2) return;
 
+      // Страница управляет вертикальной прокруткой сама.
+      event.preventDefault();
+
       const direction = Math.sign(event.deltaY);
       const nextScreen = activeScreenRef.current + direction;
 
-      // Не перехватываем прокрутку за пределами доступных экранов.
-      if (nextScreen < 0 || nextScreen >= screens.length) return;
-
-      // Страница управляет вертикальной прокруткой сама.
-      event.preventDefault();
+      // За границами списка экранов сбрасываем незавершённый прогресс.
+      if (nextScreen < 0 || nextScreen >= screens.length) {
+        accumulatedProgressRef.current = 0;
+        directionRef.current = 0;
+        setScrollProgress(0);
+        return;
+      }
 
       if (transitioningRef.current) return;
 
@@ -104,6 +109,7 @@ export const ScreenPager = ({ screens }: Props) => {
             className="screen-pager__screen"
             key={index}
             aria-hidden={index !== activeScreen}
+            inert={index !== activeScreen}
           >
             {screen}
           </section>
