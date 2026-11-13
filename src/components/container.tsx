@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Container } from "react-bootstrap";
+import { ScreenPager } from "./ScreenPager/ScreenPager";
 import { useSiteConfig } from "../config/useSiteConfig";
 import { useTitleMarquee } from "../hooks/useTitleMarquee";
 import { AvatarBlock } from "./avatar/block";
@@ -23,21 +24,37 @@ export const MainContainer = () => {
   return (
     <>
       <MatrixBackground config={config.background.matrix} />
-      <Container as="main" fluid className="main-container" style={layoutStyle}>
-        <section className="profile-panel" aria-label="Профиль">
-          <AvatarBlock profile={config.profile} twitch={config.twitch} />
-          <FlipTitle
-            title={config.profile.title}
-            flip={config.profile.titleFlip}
-          />
-        </section>
+      <ScreenPager
+        screens={[
+          <Container
+            as="main"
+            fluid
+            className="main-container"
+            style={layoutStyle}
+            key="home"
+          >
+            <section className="profile-panel" aria-label="Профиль">
+              <AvatarBlock profile={config.profile} twitch={config.twitch} />
+              <FlipTitle
+                title={config.profile.title}
+                flip={config.profile.titleFlip}
+              />
+            </section>
 
-        <section className="links-panel" aria-label="Ссылки">
-          {config.groups.map((group) => (
-            <LinkGroup key={group.id} group={group} />
-          ))}
-        </section>
-      </Container>
+            <section className="links-panel" aria-label="Ссылки">
+              {config.groups.map((group) => (
+                <LinkGroup key={group.id} group={group} />
+              ))}
+            </section>
+          </Container>,
+          <div
+            className="about-screen-placeholder"
+            role="region"
+            aria-label="Обо мне"
+            key="about"
+          />,
+        ]}
+      />
     </>
   );
 };

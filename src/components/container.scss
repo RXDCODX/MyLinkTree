@@ -163,9 +163,8 @@ h2 {
 }
 
 /*
- * Each group gets one extra flex unit for its heading. This prevents a
- * one-link group (for example Twitch) from losing its button to the heading.
- * Every button then receives one unit of the remaining group height.
+ * Each group gets a flex share based on its links and one heading unit.
+ * Buttons get the remaining room evenly within the group.
  */
 .link-group {
   flex: var(--group-weight, 1) 1 0;
@@ -232,7 +231,7 @@ a {
   height: 1.15em;
 }
 
-/* Аватарка и заголовок рассчитываются от ширины profile-panel, не links-panel. */
+/* Container units adapt controls to the available height of the links area. */
 @supports (height: 1cqh) {
   .profile-panel .avatar-border {
     width: min(320px, 80cqh, 78vw);
