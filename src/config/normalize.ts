@@ -59,7 +59,7 @@ export const normalizeLayout = (
     ),
     linksWidthPercent: Math.min(
       95,
-      Math.max(30, asNumber(raw.linksWidthPercent, fallback.linksWidthPercent)),
+      Math.max(10, asNumber(raw.linksWidthPercent, fallback.linksWidthPercent)),
     ),
   };
 };

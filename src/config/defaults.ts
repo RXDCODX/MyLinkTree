@@ -40,7 +40,7 @@ export const defaultConfig: SiteConfig = {
   },
   layout: {
     profileHeightPercent: 40,
-    linksWidthPercent: 46,
+    linksWidthPercent: 20,
   },
   background: {
     matrix: {

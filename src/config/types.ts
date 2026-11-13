@@ -39,7 +39,7 @@ export interface TwitchConfig {
 export interface LayoutConfig {
   /** Доля высоты экрана для аватарки и заголовка (10–60). */
   profileHeightPercent: number;
-  /** Ширина блока ссылок в процентах от ширины экрана (30–95). */
+  /** Ширина области ссылок в процентах от ширины экрана на десктопе (10–95). */
   linksWidthPercent: number;
 }
 
