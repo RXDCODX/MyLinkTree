@@ -8,7 +8,8 @@ interface Props {
 }
 
 const WHEEL_NOTCHES_PER_SCREEN = 3;
-const WHEEL_DELTA_PER_NOTCH = 300;
+const WHEEL_DELTA_PER_NOTCH = 100;
+const WHEEL_IDLE_RESET_MS = 1000;
 const TRANSITION_DURATION_MS = 760;
 const LINE_DELTA_IN_PIXELS = 40;
 
@@ -20,6 +21,7 @@ export const ScreenPager = ({ screens }: Props) => {
   const directionRef = useRef(0);
   const transitioningRef = useRef(false);
   const transitionTimerRef = useRef<number | null>(null);
+  const wheelIdleTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
@@ -38,6 +40,12 @@ export const ScreenPager = ({ screens }: Props) => {
         accumulatedWheelDeltaRef.current = 0;
         directionRef.current = 0;
         setScrollProgress(0);
+
+        if (wheelIdleTimerRef.current !== null) {
+          window.clearTimeout(wheelIdleTimerRef.current);
+          wheelIdleTimerRef.current = null;
+        }
+
         return;
       }
 
@@ -71,6 +79,11 @@ export const ScreenPager = ({ screens }: Props) => {
         accumulatedWheelDeltaRef.current >=
         WHEEL_NOTCHES_PER_SCREEN * WHEEL_DELTA_PER_NOTCH
       ) {
+        if (wheelIdleTimerRef.current !== null) {
+          window.clearTimeout(wheelIdleTimerRef.current);
+          wheelIdleTimerRef.current = null;
+        }
+
         activeScreenRef.current = nextScreen;
         setActiveScreen(nextScreen);
         transitioningRef.current = true;
@@ -87,6 +100,18 @@ export const ScreenPager = ({ screens }: Props) => {
           setScrollProgress(0);
           transitionTimerRef.current = null;
         }, TRANSITION_DURATION_MS);
+      } else {
+        // Если прокрутка прервалась на секунду, начинаем накопление заново.
+        if (wheelIdleTimerRef.current !== null) {
+          window.clearTimeout(wheelIdleTimerRef.current);
+        }
+
+        wheelIdleTimerRef.current = window.setTimeout(() => {
+          accumulatedWheelDeltaRef.current = 0;
+          directionRef.current = 0;
+          setScrollProgress(0);
+          wheelIdleTimerRef.current = null;
+        }, WHEEL_IDLE_RESET_MS);
       }
     };
 
@@ -96,6 +121,9 @@ export const ScreenPager = ({ screens }: Props) => {
       window.removeEventListener("wheel", handleWheel);
       if (transitionTimerRef.current !== null) {
         window.clearTimeout(transitionTimerRef.current);
+      }
+      if (wheelIdleTimerRef.current !== null) {
+        window.clearTimeout(wheelIdleTimerRef.current);
       }
     };
   }, [screens.length]);
