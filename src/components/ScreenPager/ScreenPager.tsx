@@ -7,8 +7,8 @@ interface Props {
   screens: ReactNode[];
 }
 
-const WHEEL_NOTCHES_PER_SCREEN = 3;
-const WHEEL_DELTA_PER_NOTCH = 100;
+const WHEEL_NOTCHES_PER_SCREEN = 5;
+const WHEEL_DELTA_PER_NOTCH = 300;
 const WHEEL_IDLE_RESET_MS = 1000;
 const TRANSITION_DURATION_MS = 760;
 const LINE_DELTA_IN_PIXELS = 40;
