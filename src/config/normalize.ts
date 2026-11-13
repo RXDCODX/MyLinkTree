@@ -52,7 +52,10 @@ export const normalizeLayout = (
   return {
     profileWidthPercent: Math.min(
       70,
-      Math.max(20, asNumber(raw.profileWidthPercent, fallback.profileWidthPercent)),
+      Math.max(
+        20,
+        asNumber(raw.profileWidthPercent, fallback.profileWidthPercent),
+      ),
     ),
   };
 };
