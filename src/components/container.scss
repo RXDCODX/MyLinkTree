@@ -1,4 +1,5 @@
 $main-color: red;
+$second-color: white;
 $outline-color: #000;
 $outline-width: 3px;
 $button-border: #ff1f1f;
@@ -10,12 +11,6 @@ $heading-color: #fff;
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-html {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 
 :root {
@@ -32,19 +27,23 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  width: 100%;
-  height: 100svh;
-  min-width: 320px;
-  min-height: 100svh;
-  margin: 0;
-  overflow: hidden;
-  background-color: black;
-}
-
+html,
+body,
 #root {
   width: 100%;
   height: 100%;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100svh;
+  margin: 0;
+  background-color: black;
 }
 
 .main-container {
@@ -53,40 +52,58 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows:
-    minmax(0, var(--profile-rows, 2fr))
-    minmax(0, var(--links-rows, 3fr));
+    minmax(0, var(--profile-rows, 20fr))
+    minmax(0, var(--links-rows, 80fr));
   align-items: stretch;
-  gap: clamp(0.35rem, 1.5vh, 1.25rem);
-  width: 100%;
+  width: min(var(--links-width, 46vw), calc(100vw - 2rem));
   max-width: none;
   height: 100svh;
   min-height: 0;
-  padding: clamp(0.5rem, 1.8vh, 1.5rem) clamp(0.6rem, 3vw, 2rem);
+  margin-inline: auto;
+  padding: 6vh 1rem 8vh;
   overflow: hidden;
 }
 
 .profile-panel {
+  container-type: size;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.25rem, 0.8vh, 0.75rem);
+  gap: 0;
   width: 100%;
   min-width: 0;
   min-height: 0;
 }
 
+/*
+ * The link area receives the complete second grid row. Each group grows
+ * according to its number of links, and every button shares the group's
+ * remaining height. This keeps buttons usable while filling the allocated
+ * area instead of collapsing to their text content height.
+ */
 .links-panel {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: center;
-  gap: clamp(0.15rem, 0.45vh, 0.4rem);
+  justify-content: stretch;
   width: 100%;
   min-width: 0;
   min-height: 0;
 }
 
+h1,
+h2,
+div.col,
+.link-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+/* Чёрная обводка вокруг всего текста, чтобы он читался на матрице. */
 h1,
 h2,
 a {
@@ -104,9 +121,8 @@ a {
 }
 
 h1 {
-  margin: 0;
-  color: $main-color;
-  font-size: clamp(1.2rem, 3vw, 2.4rem);
+  margin: 0.6em 0 0;
+  font-size: clamp(1.7rem, 7vw, 2.6rem);
   line-height: 1.15;
   text-shadow:
     -2px -2px 0 $outline-color,
@@ -117,16 +133,15 @@ h1 {
 }
 
 .profile-panel h1 {
-  max-width: 100%;
-  margin: 0;
+  flex: 0 0 auto;
 }
 
 h2 {
-  margin: 0 0 clamp(0.1rem, 0.35vh, 0.3rem);
+  flex: 0 0 auto;
+  margin: 1.8em 0 0.2em;
   color: $heading-color;
-  font-size: clamp(0.65rem, 1vw, 0.9rem);
-  line-height: 1.1;
-  letter-spacing: 0.2em;
+  font-size: 1.1em;
+  letter-spacing: 0.22em;
   text-shadow:
     -2px -2px 0 $outline-color,
     2px -2px 0 $outline-color,
@@ -136,12 +151,15 @@ h2 {
 }
 
 .link-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  flex: var(--group-weight, 1) 1 0;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+}
+
+.link-group > a {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 a {
@@ -150,17 +168,15 @@ a {
   align-items: center;
   justify-content: center;
   width: 95%;
-  max-width: 100%;
-  margin-bottom: clamp(0.08rem, 0.25vh, 0.2rem);
-  padding: clamp(0.25rem, 0.55vh, 0.5rem) 0.9em;
+  margin-bottom: 0.4em;
+  padding: 0.6em 1.2em;
   border: 1px solid $button-border;
   border-radius: 8px;
   background-color: $button-bg;
   color: whitesmoke;
   font-family: inherit;
-  font-size: clamp(0.72rem, min(1.15vw, 1.55vh), 1.05rem);
+  font-size: clamp(1rem, 4.5vw, 1.5rem);
   font-weight: 500;
-  line-height: 1.15;
   text-decoration: inherit;
   cursor: pointer;
   backdrop-filter: blur(3px);
@@ -198,69 +214,48 @@ a {
   height: 1.15em;
 }
 
-@media (width <= 760px) {
-  .main-container {
-    gap: clamp(0.3rem, 1vh, 0.65rem);
-    padding: clamp(0.35rem, 1.2vh, 0.8rem) clamp(0.5rem, 2.5vw, 1rem);
-  }
-
-  .profile-panel {
-    gap: 0.3rem;
-  }
-
-  .profile-panel h1 {
-    font-size: clamp(0.9rem, 4vw, 1.5rem);
-  }
-
-  .links-panel {
-    gap: clamp(0.12rem, 0.35vh, 0.3rem);
-  }
-
-  .link-group h2 {
-    margin-bottom: 0.2rem;
-    font-size: clamp(0.62rem, 2.4vw, 0.8rem);
-  }
-
-  .link-group a {
-    gap: 0.35em;
-    margin-bottom: 0.15rem;
-    padding: clamp(0.2rem, 0.5vh, 0.35rem) 0.45em;
-    border-radius: 7px;
-    font-size: clamp(0.64rem, 2.4vw, 0.85rem);
-  }
-
-  .my-button {
-    padding-inline: 0.5em;
+@supports (width: 1cqh) {
+  .profile-panel .avatar-border {
+    width: min(320px, 58cqh, 78vw);
   }
 }
 
-@media (max-height: 480px) {
+@media (height <= 760px) {
   .main-container {
-    gap: 0.2rem;
-    padding-block: 0.25rem;
-  }
-
-  .profile-panel {
-    gap: 0.15rem;
+    padding-block: clamp(0.5rem, 4vh, 6vh) clamp(0.5rem, 5vh, 8vh);
   }
 
   .profile-panel h1 {
-    font-size: clamp(0.75rem, 3vh, 1.2rem);
+    font-size: clamp(1rem, 4.5vh, 2.6rem);
   }
 
-  .links-panel {
-    gap: 0.1rem;
+  h2 {
+    margin-top: clamp(0.5rem, 1.8vh, 1.8em);
   }
 
-  .link-group h2 {
-    margin-bottom: 0.08rem;
-    font-size: 0.6rem;
+  .link-group > a {
+    font-size: clamp(0.85rem, 1.8vh, 1.25rem);
+    padding-block: clamp(0.25rem, 0.6em, 0.6em);
+    margin-bottom: clamp(0.15rem, 0.4em, 0.4em);
+  }
+}
+
+@media (width <= 760px) {
+  .main-container {
+    width: min(95vw, calc(100vw - 1rem));
+    padding-inline: 0.75rem;
   }
 
-  .link-group a {
-    margin-bottom: 0.08rem;
-    padding-block: 0.12rem;
-    font-size: 0.62rem;
+  .profile-panel h1 {
+    font-size: clamp(1rem, 6vw, 2rem);
+  }
+
+  h2 {
+    font-size: clamp(0.8rem, 3.5vw, 1.1em);
+  }
+
+  .link-group > a {
+    font-size: clamp(0.8rem, 3.5vw, 1.1rem);
   }
 }
 
@@ -271,4 +266,26 @@ a {
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-text-stroke-width: 2px;
   }
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: $main-color;
+
+  &:hover {
+    background-color: $main-color;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }

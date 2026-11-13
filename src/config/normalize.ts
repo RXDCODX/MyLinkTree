@@ -53,9 +53,13 @@ export const normalizeLayout = (
     profileHeightPercent: Math.min(
       60,
       Math.max(
-        20,
+        10,
         asNumber(raw.profileHeightPercent, fallback.profileHeightPercent),
       ),
+    ),
+    linksWidthPercent: Math.min(
+      95,
+      Math.max(30, asNumber(raw.linksWidthPercent, fallback.linksWidthPercent)),
     ),
   };
 };

@@ -1,15 +1,20 @@
 # Layout configuration
 
 The page uses a vertical layout and is designed to fit within the visible
-browser viewport: the profile is above the link groups.
+browser viewport. The profile sits above the link groups.
 
-Set `layout.profileHeightPercent` in `links.json` to control how much of the
-available height is reserved for the avatar and profile title. The links
-panel uses the remaining height.
+Set `layout.profileHeightPercent` to control how much of the available
+height belongs to the avatar and title. The links area receives the remaining
+height. For example, `20` gives the links area 80% of the available height.
 
-The value is normalized to the range `20`–`60`; the default is `40`,
-which gives the profile 40% and the links panel 60%.
+Set `layout.linksWidthPercent` to control the width of the centered page
+content relative to the viewport. Buttons retain their original 95% width
+inside each link group, so changing the content width scales the buttons
+proportionally without making them span the entire screen.
 
-Link groups and their buttons stay in one vertical column. Compact spacing
-and viewport-aware sizing keep the current set of links visible without
-scrolling on common desktop and mobile screen sizes.
+Both values are normalized: `profileHeightPercent` accepts 10–60 and
+`linksWidthPercent` accepts 30–95. The current defaults are 40 and 46.
+
+The original vertical spacing, button padding, and button width are retained.
+Link groups divide the available height according to their number of links,
+and buttons expand to fill the remaining space within each group.
