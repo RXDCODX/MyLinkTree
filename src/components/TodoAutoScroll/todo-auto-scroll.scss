@@ -1,0 +1,103 @@
+.todo-auto-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+}
+
+.todo-auto-scroll__track {
+  display: flex;
+  flex-direction: column;
+  height: 200%;
+  animation: todo-auto-scroll var(--todo-scroll-duration, 36s) linear infinite;
+}
+
+.todo-auto-scroll__sequence {
+  display: flex;
+  flex: 0 0 50%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: clamp(0.75rem, 2vh, 1.5rem);
+  min-height: 0;
+  margin: 0;
+  padding: 0.5rem 0.25rem;
+  list-style: none;
+}
+
+.todo-auto-scroll__item {
+  display: flex;
+  flex: 0 0 auto;
+  gap: clamp(0.65rem, 1.5vw, 1rem);
+  align-items: flex-start;
+  color: rgb(255 255 255 / 90%);
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.todo-auto-scroll__marker {
+  flex: 0 0 auto;
+  min-width: 2.5em;
+  padding: 0.15em 0.35em;
+  border: 1px solid rgb(255 31 31 / 55%);
+  border-radius: 6px;
+  color: #ff5555;
+  font-size: 0.78em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.todo-auto-scroll__empty {
+  margin: 0;
+  color: rgb(255 255 255 / 60%);
+  text-align: left;
+}
+
+.todo-auto-scroll:hover .todo-auto-scroll__track,
+.todo-auto-scroll:focus-within .todo-auto-scroll__track {
+  animation-play-state: paused;
+}
+
+@keyframes todo-auto-scroll {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .todo-auto-scroll {
+    overflow-y: auto;
+    mask-image: none;
+  }
+
+  .todo-auto-scroll__track {
+    height: auto;
+    animation: none;
+  }
+
+  .todo-auto-scroll__sequence[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+@media (width <= 640px) {
+  .todo-auto-scroll__item {
+    font-size: 0.85rem;
+  }
+
+  .todo-auto-scroll__sequence {
+    gap: 0.75rem;
+  }
+}
