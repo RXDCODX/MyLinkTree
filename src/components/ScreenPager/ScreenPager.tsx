@@ -7,8 +7,8 @@ interface Props {
   screens: ReactNode[];
 }
 
-const WHEEL_STEPS_PER_SCREEN = 3;
-const MAX_PROGRESS_PER_EVENT = 1;
+const WHEEL_NOTCHES_PER_SCREEN = 3;
+const WHEEL_DELTA_PER_NOTCH = 100;
 const TRANSITION_DURATION_MS = 760;
 const LINE_DELTA_IN_PIXELS = 40;
 
@@ -16,7 +16,7 @@ export const ScreenPager = ({ screens }: Props) => {
   const [activeScreen, setActiveScreen] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const activeScreenRef = useRef(0);
-  const accumulatedProgressRef = useRef(0);
+  const accumulatedWheelDeltaRef = useRef(0);
   const directionRef = useRef(0);
   const transitioningRef = useRef(false);
   const transitionTimerRef = useRef<number | null>(null);
@@ -35,7 +35,7 @@ export const ScreenPager = ({ screens }: Props) => {
 
       // За границами списка экранов сбрасываем незавершённый прогресс.
       if (nextScreen < 0 || nextScreen >= screens.length) {
-        accumulatedProgressRef.current = 0;
+        accumulatedWheelDeltaRef.current = 0;
         directionRef.current = 0;
         setScrollProgress(0);
         return;
@@ -48,30 +48,33 @@ export const ScreenPager = ({ screens }: Props) => {
         delta *= window.innerHeight;
       }
 
-      // Один wheel event засчитывается максимум как один шаг.
-      const stepProgress = Math.min(delta, MAX_PROGRESS_PER_EVENT * 100) / 100;
-
       if (directionRef.current !== direction) {
         directionRef.current = direction;
-        accumulatedProgressRef.current = 0;
+        accumulatedWheelDeltaRef.current = 0;
       }
 
-      accumulatedProgressRef.current = Math.min(
-        WHEEL_STEPS_PER_SCREEN,
-        accumulatedProgressRef.current + stepProgress,
+      // Считаем накопленную дистанцию прокрутки, а не количество wheel events.
+      // Несколько событий от одного физического щелчка складываются в один notch.
+      accumulatedWheelDeltaRef.current = Math.min(
+        WHEEL_NOTCHES_PER_SCREEN * WHEEL_DELTA_PER_NOTCH,
+        accumulatedWheelDeltaRef.current + delta,
       );
 
       const progress = Math.min(
         1,
-        accumulatedProgressRef.current / WHEEL_STEPS_PER_SCREEN,
+        accumulatedWheelDeltaRef.current /
+          (WHEEL_NOTCHES_PER_SCREEN * WHEEL_DELTA_PER_NOTCH),
       );
       setScrollProgress(progress);
 
-      if (accumulatedProgressRef.current >= WHEEL_STEPS_PER_SCREEN) {
+      if (
+        accumulatedWheelDeltaRef.current >=
+        WHEEL_NOTCHES_PER_SCREEN * WHEEL_DELTA_PER_NOTCH
+      ) {
         activeScreenRef.current = nextScreen;
         setActiveScreen(nextScreen);
         transitioningRef.current = true;
-        accumulatedProgressRef.current = 0;
+        accumulatedWheelDeltaRef.current = 0;
         directionRef.current = 0;
         setScrollProgress(1);
 
