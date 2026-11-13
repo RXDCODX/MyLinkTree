@@ -28,6 +28,8 @@ export const ScreenPager = ({ screens }: Props) => {
       // Страница управляет вертикальной прокруткой сама.
       event.preventDefault();
 
+      if (transitioningRef.current) return;
+
       const direction = Math.sign(event.deltaY);
       const nextScreen = activeScreenRef.current + direction;
 
@@ -38,8 +40,6 @@ export const ScreenPager = ({ screens }: Props) => {
         setScrollProgress(0);
         return;
       }
-
-      if (transitioningRef.current) return;
 
       let delta = Math.abs(event.deltaY);
       if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
