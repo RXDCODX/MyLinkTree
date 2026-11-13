@@ -7,8 +7,9 @@ interface Props {
 }
 
 export const LinkGroup = ({ group }: Props) => {
+  // Резервируем отдельную flex-единицу для заголовка группы.
   const groupStyle = {
-    "--group-weight": group.links.length,
+    "--group-weight": group.links.length + 1,
   } as CSSProperties;
 
   return (

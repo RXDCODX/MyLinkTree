@@ -70,8 +70,8 @@ body {
     minmax(0, var(--profile-rows, 40fr))
     minmax(0, var(--links-rows, 60fr));
   align-items: stretch;
-  width: min(var(--links-width, 20vw), var(--page-max-width), calc(100vw - 2rem));
-  max-width: var(--page-max-width);
+  width: 100%;
+  max-width: none;
   height: 100svh;
   min-height: 0;
   margin-inline: auto;
@@ -87,9 +87,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0;
-  width: 100%;
+  width: min(100%, var(--page-max-width));
   min-width: 0;
   min-height: 0;
+  margin-inline: auto;
 }
 
 .links-panel {
@@ -99,9 +100,10 @@ body {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  width: 100%;
+  width: min(var(--links-width, 20vw), var(--page-max-width), calc(100vw - 2rem));
   min-width: 0;
   min-height: 0;
+  margin-inline: auto;
 }
 
 h1,
@@ -161,9 +163,9 @@ h2 {
 }
 
 /*
- * Group height is proportional to its number of links. Each button then
- * grows equally inside its group, so the available links area is actually
- * used instead of leaving unused space below the last button.
+ * Each group gets one extra flex unit for its heading. This prevents a
+ * one-link group (for example Twitch) from losing its button to the heading.
+ * Every button then receives one unit of the remaining group height.
  */
 .link-group {
   flex: var(--group-weight, 1) 1 0;
@@ -230,11 +232,7 @@ a {
   height: 1.15em;
 }
 
-/*
- * Container query units scale typography and vertical rhythm against the
- * actual space allocated to the links, not against viewport width alone.
- * At roomy heights these resolve to the original values above.
- */
+/* Аватарка и заголовок рассчитываются от ширины profile-panel, не links-panel. */
 @supports (height: 1cqh) {
   .profile-panel .avatar-border {
     width: min(320px, 80cqh, 78vw);
@@ -255,9 +253,12 @@ a {
 }
 
 @media (width <= 760px) {
-  .main-container {
+  .profile-panel {
+    width: min(100%, var(--page-max-width));
+  }
+
+  .links-panel {
     width: min(95vw, var(--page-max-width));
-    padding-inline: 0.75rem;
   }
 }
 
