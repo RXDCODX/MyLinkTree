@@ -16,7 +16,12 @@ export const TodoAutoScroll = ({ items }: Props) => {
   }
 
   return (
-    <div className="todo-auto-scroll" aria-label="Список задач">
+    <div
+      className="todo-auto-scroll"
+      role="region"
+      aria-label="Список задач"
+      tabIndex={0}
+    >
       <div className="todo-auto-scroll__track" style={trackStyle}>
         {[0, 1].map((copy) => (
           <ul
