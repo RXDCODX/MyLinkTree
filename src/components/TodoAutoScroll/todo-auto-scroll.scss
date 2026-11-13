@@ -23,19 +23,47 @@
   display: flex;
   flex: 0 0 50%;
   flex-direction: column;
-  justify-content: flex-start;
   gap: 0.35rem;
   min-height: 0;
   margin: 0;
   padding: 0.2rem 0.25rem;
-  list-style: none;
 }
 
-.todo-auto-scroll__item {
+.todo-auto-scroll__sequence > div {
   display: flex;
-  flex: 0 0 auto;
   flex-direction: column;
-  gap: 0.08rem;
+  gap: 0.35rem;
+}
+
+.todo-auto-scroll__sequence h1,
+.todo-auto-scroll__sequence h2,
+.todo-auto-scroll__sequence h3,
+.todo-auto-scroll__sequence h4,
+.todo-auto-scroll__sequence h5,
+.todo-auto-scroll__sequence h6 {
+  margin: 0 0 0.7rem;
+  color: #ff3030;
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-shadow: 0 0 18px rgb(255 0 0 / 35%);
+}
+
+.todo-auto-scroll__sequence p {
+  margin: 0;
+}
+
+.todo-auto-scroll__sequence ul,
+.todo-auto-scroll__sequence ol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.todo-auto-scroll__sequence li {
   min-width: 0;
   padding: 0.18rem 0.35rem;
   border-radius: 5px;
@@ -47,44 +75,84 @@
   transition: background-color 160ms ease;
 }
 
-.todo-auto-scroll__item:hover {
+.todo-auto-scroll__sequence li:hover {
   background: rgb(255 255 255 / 8%);
 }
 
-.todo-auto-scroll__task-line {
-  display: flex;
-  gap: 0.55rem;
-  align-items: baseline;
-  min-width: 0;
+.todo-auto-scroll__sequence li:has(input[type="checkbox"]) {
+  margin-left: -1.2rem;
+  list-style: none;
 }
 
-.todo-auto-scroll__checkbox {
-  flex: 0 0 auto;
-  color: #ff6666;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.92em;
-  white-space: pre;
+.todo-auto-scroll__sequence input[type="checkbox"] {
+  margin: 0 0.55rem 0 0;
+  accent-color: #ff6666;
+  vertical-align: middle;
+  pointer-events: none;
 }
 
-.todo-auto-scroll__task-text {
-  min-width: 0;
-}
-
-.todo-auto-scroll__item[data-completed="true"] .todo-auto-scroll__task-text {
+.todo-auto-scroll__sequence li:has(input[type="checkbox"]:checked) > p:first-of-type {
   color: rgb(255 255 255 / 58%);
   text-decoration: line-through;
   text-decoration-color: rgb(255 255 255 / 38%);
 }
 
-.todo-auto-scroll__completed-at {
-  display: block;
-  margin-left: 2.85em;
+.todo-auto-scroll__sequence li:has(input[type="checkbox"]:checked) > p + p {
+  margin: 0.08rem 0 0 2.1em;
   color: rgb(255 255 255 / 48%);
   font-size: 0.72em;
   font-style: italic;
   text-decoration: underline;
   text-decoration-color: rgb(255 255 255 / 28%);
   text-underline-offset: 2px;
+}
+
+.todo-auto-scroll__sequence a {
+  color: #ff7777;
+  text-decoration-color: rgb(255 119 119 / 45%);
+  text-underline-offset: 3px;
+}
+
+.todo-auto-scroll__sequence a:hover {
+  color: #fff;
+}
+
+.todo-auto-scroll__sequence blockquote {
+  margin: 0.5em 0;
+  padding: 0.2em 0.85em;
+  border-left: 3px solid rgb(255 48 48 / 65%);
+  color: rgb(255 255 255 / 68%);
+}
+
+.todo-auto-scroll__sequence pre {
+  max-width: 100%;
+  padding: 0.75em;
+  overflow: auto;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 28%);
+  font-size: 0.82em;
+}
+
+.todo-auto-scroll__sequence :not(pre) > code {
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 10%);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.88em;
+}
+
+.todo-auto-scroll__sequence table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.todo-auto-scroll__sequence th,
+.todo-auto-scroll__sequence td {
+  padding: 0.4em 0.6em;
+  border: 1px solid rgb(255 255 255 / 20%);
 }
 
 .todo-auto-scroll__empty {
@@ -125,17 +193,18 @@
 }
 
 @media (width <= 640px) {
-  .todo-auto-scroll__item {
+  .todo-auto-scroll__sequence li {
     font-size: 0.85rem;
   }
 
-  .todo-auto-scroll__sequence {
+  .todo-auto-scroll__sequence ul,
+  .todo-auto-scroll__sequence ol {
     gap: 0.3rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .todo-auto-scroll__item {
+  .todo-auto-scroll__sequence li {
     transition: none;
   }
 }

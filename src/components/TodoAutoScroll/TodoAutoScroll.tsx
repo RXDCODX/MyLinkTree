@@ -1,31 +1,29 @@
 import type { CSSProperties } from "react";
+import Markdown from "markdown-to-jsx/react";
 import "./todo-auto-scroll.scss";
 
-export interface TodoItem {
-  id: string;
-  text: string;
-  completed: boolean;
-  /** Дата закрытия в формате YYYY-MM-DD. Указывается для выполненной задачи. */
-  completedAt?: string;
-}
-
 interface Props {
-  items: TodoItem[];
+  content: string;
 }
 
-const formatCompletionDate = (date: string) => {
-  const parts = date.split("-");
-  if (parts.length !== 3) return date;
-  return parts.reverse().join(".");
+const createHeadingSlug = (heading: string, copy: number) => {
+  const slug = heading
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}_-]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return `${copy}-${slug || "section"}`;
 };
 
-export const TodoAutoScroll = ({ items }: Props) => {
-  const duration = Math.max(items.length * 4, 18);
+export const TodoAutoScroll = ({ content }: Props) => {
+  const taskCount = content.match(/^\s*(?:[-*+]|\d+\.)\s+/gm)?.length ?? 0;
+  const duration = Math.max(taskCount * 4, 18);
   const trackStyle = {
     "--todo-scroll-duration": duration + "s",
   } as CSSProperties;
 
-  if (items.length === 0) {
+  if (content.trim().length === 0) {
     return <p className="todo-auto-scroll__empty">Пока задач нет.</p>;
   }
 
@@ -38,39 +36,15 @@ export const TodoAutoScroll = ({ items }: Props) => {
     >
       <div className="todo-auto-scroll__track" style={trackStyle}>
         {[0, 1].map((copy) => (
-          <ul
+          <div
             className="todo-auto-scroll__sequence"
             key={copy}
             aria-hidden={copy === 1}
           >
-            {items.map((item) => (
-              <li
-                className="todo-auto-scroll__item"
-                data-completed={item.completed}
-                key={copy + "-" + item.id}
-              >
-                <div className="todo-auto-scroll__task-line">
-                  <span
-                    className="todo-auto-scroll__checkbox"
-                    aria-hidden="true"
-                  >
-                    {item.completed ? "[x]" : "[ ]"}
-                  </span>
-                  <span className="todo-auto-scroll__task-text">
-                    {item.text}
-                  </span>
-                </div>
-                {item.completed && item.completedAt && (
-                  <time
-                    className="todo-auto-scroll__completed-at"
-                    dateTime={item.completedAt}
-                  >
-                    Закрыта: {formatCompletionDate(item.completedAt)}
-                  </time>
-                )}
-              </li>
-            ))}
-          </ul>
+            <Markdown options={{ slugify: (heading) => createHeadingSlug(heading, copy) }}>
+              {content}
+            </Markdown>
+          </div>
         ))}
       </div>
     </div>

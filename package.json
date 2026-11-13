@@ -21,6 +21,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "gh-pages": "^6.3.0",
+    "markdown-to-jsx": "^9.10.6",
     "prettier": "^3.4.2",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.7",

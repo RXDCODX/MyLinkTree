@@ -18,38 +18,156 @@
   overflow: hidden;
 }
 
-.about-screen__title {
-  flex: 0 0 auto;
-  margin: 0 0 clamp(0.75rem, 1.5vh, 1.25rem);
-  color: #ff3030;
-  font-size: clamp(1.4rem, 3vw, 2.5rem);
-  line-height: 1.15;
-  letter-spacing: 0.08em;
-  text-align: left;
-  text-shadow: 0 0 18px rgb(255 0 0 / 35%);
-}
-
-.about-screen__text {
+.about-screen__markdown {
+  min-width: 0;
   min-height: 0;
-  overflow-y: auto;
+  overflow: auto;
   color: rgb(255 255 255 / 88%);
   font-size: clamp(0.95rem, 1.35vw, 1.15rem);
   line-height: 1.65;
   text-align: left;
   overflow-wrap: anywhere;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 25%) transparent;
 }
 
-.about-screen__text-line {
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 0 0.75em;
-  padding: 0.2em 0.45em;
+.about-screen__markdown > div {
+  min-width: 0;
+}
+
+.about-screen__markdown h1,
+.about-screen__markdown h2,
+.about-screen__markdown h3,
+.about-screen__markdown h4,
+.about-screen__markdown h5,
+.about-screen__markdown h6 {
+  color: #ff3030;
+  line-height: 1.2;
+  text-align: left;
+  text-shadow: 0 0 18px rgb(255 0 0 / 35%);
+}
+
+.about-screen__markdown h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
+  letter-spacing: 0.08em;
+}
+
+.about-screen__markdown h2 {
+  margin: 1.35em 0 0.55em;
+  font-size: clamp(1.15rem, 2.2vw, 1.8rem);
+}
+
+.about-screen__markdown h3,
+.about-screen__markdown h4,
+.about-screen__markdown h5,
+.about-screen__markdown h6 {
+  margin: 1.1em 0 0.45em;
+  font-size: 1.05em;
+}
+
+.about-screen__markdown p,
+.about-screen__markdown li,
+.about-screen__markdown blockquote {
   border-radius: 5px;
   transition: background-color 160ms ease;
 }
 
-.about-screen__text-line:hover {
+.about-screen__markdown p {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 0.75em;
+  padding: 0.2em 0.45em;
+}
+
+.about-screen__markdown p:hover,
+.about-screen__markdown li:hover,
+.about-screen__markdown blockquote:hover {
   background: rgb(255 255 255 / 8%);
+}
+
+.about-screen__markdown ul,
+.about-screen__markdown ol {
+  margin: 0 0 0.85em;
+  padding-left: 1.5em;
+}
+
+.about-screen__markdown li {
+  margin: 0.18em 0;
+  padding: 0.15em 0.35em;
+}
+
+.about-screen__markdown a {
+  color: #ff7777;
+  text-decoration-color: rgb(255 119 119 / 45%);
+  text-underline-offset: 3px;
+}
+
+.about-screen__markdown a:hover {
+  color: #fff;
+  text-decoration-color: currentColor;
+}
+
+.about-screen__markdown blockquote {
+  margin: 0.9em 0;
+  padding: 0.2em 0.85em;
+  border-left: 3px solid rgb(255 48 48 / 65%);
+  color: rgb(255 255 255 / 68%);
+}
+
+.about-screen__markdown pre {
+  max-width: 100%;
+  padding: 0.85em 1em;
+  overflow: auto;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 6px;
+  background: rgb(0 0 0 / 28%);
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+.about-screen__markdown :not(pre) > code {
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 10%);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.88em;
+}
+
+.about-screen__markdown table {
+  display: block;
+  max-width: 100%;
+  margin: 0.9em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.about-screen__markdown th,
+.about-screen__markdown td {
+  padding: 0.45em 0.7em;
+  border: 1px solid rgb(255 255 255 / 20%);
+}
+
+.about-screen__markdown th {
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+}
+
+.about-screen__markdown hr {
+  margin: 1.2em 0;
+  border-color: rgb(255 255 255 / 25%);
+}
+
+.about-screen__markdown img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.about-screen__markdown input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: #ff6666;
 }
 
 @media (width <= 640px) {
@@ -64,18 +182,20 @@
     padding: 0.5rem;
   }
 
-  .about-screen__title {
-    margin-bottom: 0.5rem;
-    font-size: clamp(1.1rem, 5vw, 1.6rem);
+  .about-screen__markdown {
+    font-size: 0.9rem;
   }
 
-  .about-screen__text {
-    font-size: 0.9rem;
+  .about-screen__markdown h1 {
+    margin-bottom: 0.5rem;
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-screen__text-line {
+  .about-screen__markdown p,
+  .about-screen__markdown li,
+  .about-screen__markdown blockquote {
     transition: none;
   }
 }
