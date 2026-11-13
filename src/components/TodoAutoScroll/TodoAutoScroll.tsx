@@ -1,6 +1,101 @@
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+} from "react";
+import type {
+  ComponentPropsWithoutRef,
+  ReactElement,
+  ReactNode,
+} from "react";
 import type { CSSProperties } from "react";
 import Markdown from "markdown-to-jsx/react";
 import "./todo-auto-scroll.scss";
+
+type CheckboxElement = ReactElement<{
+  checked?: boolean;
+  type?: string;
+}>;
+
+const isTaskCheckbox = (node: ReactNode): node is CheckboxElement =>
+  isValidElement(node) &&
+  node.type === "input" &&
+  (node.props as { type?: string }).type === "checkbox";
+
+const isBlockElement = (node: ReactNode) =>
+  isValidElement(node) &&
+  typeof node.type === "string" &&
+  ["blockquote", "div", "hr", "ol", "p", "pre", "table", "ul"].includes(
+    node.type,
+  );
+
+const MarkdownListItem = ({
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"li">) => {
+  const nodes = Children.toArray(children);
+  const checkboxIndex = nodes.findIndex(isTaskCheckbox);
+
+  if (checkboxIndex === -1) {
+    return <li {...props}>{children}</li>;
+  }
+
+  const checkbox = nodes[checkboxIndex] as CheckboxElement;
+  const completed = Boolean(checkbox.props.checked);
+  const contentNodes = nodes.filter((_, index) => index !== checkboxIndex);
+  const firstBlockIndex = contentNodes.findIndex(isBlockElement);
+  const inlineContent =
+    firstBlockIndex === -1
+      ? contentNodes
+      : contentNodes.slice(0, firstBlockIndex);
+  const blockContent =
+    firstBlockIndex === -1 ? [] : contentNodes.slice(firstBlockIndex);
+
+  let label: ReactNode = inlineContent.length > 0 ? (
+    <span className="todo-auto-scroll__task-label">{inlineContent}</span>
+  ) : null;
+  let additionalContent: ReactNode[] = blockContent;
+
+  const firstBlock = blockContent[0];
+  if (isValidElement(firstBlock) && firstBlock.type === "p") {
+    const paragraph = firstBlock as ReactElement<
+      ComponentPropsWithoutRef<"p">
+    >;
+    label = cloneElement(paragraph, {
+      className: [
+        paragraph.props.className,
+        "todo-auto-scroll__task-label",
+      ]
+        .filter(Boolean)
+        .join(" "),
+    });
+    additionalContent = blockContent.slice(1).map((node) => {
+      if (!completed || !isValidElement(node) || node.type !== "p") {
+        return node;
+      }
+
+      const dateParagraph = node as ReactElement<
+        ComponentPropsWithoutRef<"p">
+      >;
+      return cloneElement(dateParagraph, {
+        className: [
+          dateParagraph.props.className,
+          "todo-auto-scroll__completed-at",
+        ]
+          .filter(Boolean)
+          .join(" "),
+      });
+    });
+  }
+
+  return (
+    <li {...props} data-completed={completed}>
+      {checkbox}
+      {label}
+      {additionalContent}
+    </li>
+  );
+};
 
 interface Props {
   content: string;
@@ -41,7 +136,14 @@ export const TodoAutoScroll = ({ content }: Props) => {
             key={copy}
             aria-hidden={copy === 1}
           >
-            <Markdown options={{ slugify: (heading) => createHeadingSlug(heading, copy) }}>
+            <Markdown
+              options={{
+                slugify: (heading) => createHeadingSlug(heading, copy),
+                overrides: {
+                  li: MarkdownListItem,
+                },
+              }}
+            >
               {content}
             </Markdown>
           </div>
