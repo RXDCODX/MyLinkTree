@@ -13,10 +13,10 @@ export const MainContainer = () => {
 
   useTitleMarquee(config.profile.title, config.site.titleMarquee);
 
-  const profileWidth = config.layout.profileWidthPercent;
+  const profileHeight = config.layout.profileHeightPercent;
   const layoutStyle = {
-    "--profile-columns": `${profileWidth}fr`,
-    "--links-columns": `${100 - profileWidth}fr`,
+    "--profile-rows": `${profileHeight}fr`,
+    "--links-rows": `${100 - profileHeight}fr`,
   } as CSSProperties;
 
   return (

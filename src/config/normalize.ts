@@ -50,11 +50,11 @@ export const normalizeLayout = (
 ): LayoutConfig => {
   const raw = asRecord(value);
   return {
-    profileWidthPercent: Math.min(
-      70,
+    profileHeightPercent: Math.min(
+      60,
       Math.max(
         20,
-        asNumber(raw.profileWidthPercent, fallback.profileWidthPercent),
+        asNumber(raw.profileHeightPercent, fallback.profileHeightPercent),
       ),
     ),
   };

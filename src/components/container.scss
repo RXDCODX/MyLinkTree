@@ -1,5 +1,4 @@
 $main-color: red;
-$second-color: white;
 $outline-color: #000;
 $outline-width: 3px;
 $button-border: #ff1f1f;
@@ -52,16 +51,17 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns:
-    minmax(0, var(--profile-columns, 2fr))
-    minmax(0, var(--links-columns, 3fr));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows:
+    minmax(0, var(--profile-rows, 2fr))
+    minmax(0, var(--links-rows, 3fr));
   align-items: stretch;
-  gap: clamp(1rem, 3vw, 3rem);
+  gap: clamp(0.35rem, 1.5vh, 1.25rem);
   width: 100%;
   max-width: none;
   height: 100svh;
   min-height: 0;
-  padding: clamp(0.75rem, 2.5vh, 2rem) clamp(0.75rem, 3vw, 3rem);
+  padding: clamp(0.5rem, 1.8vh, 1.5rem) clamp(0.6rem, 3vw, 2rem);
   overflow: hidden;
 }
 
@@ -70,18 +70,19 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.35rem, 1.5vh, 1.25rem);
+  gap: clamp(0.25rem, 0.8vh, 0.75rem);
   width: 100%;
   min-width: 0;
   min-height: 0;
 }
 
 .links-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  gap: clamp(0.2rem, 0.9vh, 0.75rem);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, auto));
+  align-content: center;
+  align-items: center;
+  gap: clamp(0.2rem, 0.8vh, 0.75rem) clamp(0.45rem, 1.5vw, 1.5rem);
   width: 100%;
   min-width: 0;
   min-height: 0;
@@ -106,7 +107,7 @@ a {
 h1 {
   margin: 0;
   color: $main-color;
-  font-size: clamp(1.3rem, 3vw, 2.6rem);
+  font-size: clamp(1.2rem, 3vw, 2.4rem);
   line-height: 1.15;
   text-shadow:
     -2px -2px 0 $outline-color,
@@ -122,9 +123,9 @@ h1 {
 }
 
 h2 {
-  margin: 0 0 clamp(0.15rem, 0.55vh, 0.4rem);
+  margin: 0 0 clamp(0.1rem, 0.35vh, 0.3rem);
   color: $heading-color;
-  font-size: clamp(0.7rem, 1vw, 0.95rem);
+  font-size: clamp(0.65rem, 1vw, 0.9rem);
   line-height: 1.1;
   letter-spacing: 0.2em;
   text-shadow:
@@ -151,14 +152,14 @@ a {
   justify-content: center;
   width: 100%;
   max-width: 100%;
-  margin-bottom: clamp(0.1rem, 0.45vh, 0.35rem);
-  padding: clamp(0.35rem, 0.75vh, 0.6rem) 0.9em;
+  margin-bottom: clamp(0.08rem, 0.25vh, 0.2rem);
+  padding: clamp(0.25rem, 0.55vh, 0.5rem) 0.9em;
   border: 1px solid $button-border;
   border-radius: 8px;
   background-color: $button-bg;
   color: whitesmoke;
   font-family: inherit;
-  font-size: clamp(0.78rem, min(1.2vw, 1.8vh), 1.1rem);
+  font-size: clamp(0.72rem, min(1.15vw, 1.55vh), 1.05rem);
   font-weight: 500;
   line-height: 1.15;
   text-decoration: inherit;
@@ -198,56 +199,35 @@ a {
   height: 1.15em;
 }
 
-@media (max-height: 640px) and (min-width: 761px) {
-  .links-panel {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-content: center;
-    gap: clamp(0.25rem, 0.8vh, 0.6rem) clamp(0.5rem, 1vw, 1rem);
-  }
-
-  .profile-panel h1 {
-    font-size: clamp(1rem, 3vh, 1.6rem);
-  }
-}
-
 @media (width <= 760px) {
   .main-container {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: clamp(0.45rem, 1.5vh, 1rem);
-    padding: clamp(0.5rem, 1.8vh, 1rem) clamp(0.6rem, 3vw, 1.25rem);
+    gap: clamp(0.3rem, 1vh, 0.65rem);
+    padding: clamp(0.35rem, 1.2vh, 0.8rem) clamp(0.5rem, 2.5vw, 1rem);
   }
 
   .profile-panel {
-    flex-direction: row;
-    gap: clamp(0.75rem, 3vw, 1.5rem);
-    height: auto;
+    gap: 0.3rem;
   }
 
   .profile-panel h1 {
-    max-width: calc(100% - 5rem);
-    font-size: clamp(0.9rem, 3.8vw, 1.5rem);
+    font-size: clamp(0.9rem, 4vw, 1.5rem);
   }
 
   .links-panel {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-content: center;
-    gap: clamp(0.4rem, 1.2vh, 0.8rem) clamp(0.45rem, 2vw, 1rem);
+    gap: clamp(0.25rem, 0.8vh, 0.6rem) clamp(0.35rem, 1.5vw, 0.75rem);
   }
 
   .link-group h2 {
-    margin-bottom: 0.25rem;
-    font-size: clamp(0.65rem, 2.4vw, 0.85rem);
+    margin-bottom: 0.2rem;
+    font-size: clamp(0.62rem, 2.4vw, 0.8rem);
   }
 
   .link-group a {
     gap: 0.35em;
-    margin-bottom: 0.2rem;
-    padding: clamp(0.25rem, 0.65vh, 0.4rem) 0.45em;
+    margin-bottom: 0.15rem;
+    padding: clamp(0.2rem, 0.5vh, 0.35rem) 0.45em;
     border-radius: 7px;
-    font-size: clamp(0.68rem, 2.4vw, 0.9rem);
+    font-size: clamp(0.64rem, 2.4vw, 0.85rem);
   }
 
   .my-button {
@@ -255,33 +235,33 @@ a {
   }
 }
 
-@media (max-height: 480px) and (max-width: 760px) {
+@media (max-height: 480px) {
   .main-container {
-    gap: 0.35rem;
-    padding-block: 0.35rem;
+    gap: 0.2rem;
+    padding-block: 0.25rem;
   }
 
   .profile-panel {
-    gap: 0.5rem;
+    gap: 0.15rem;
   }
 
   .profile-panel h1 {
-    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    font-size: clamp(0.75rem, 3vh, 1.2rem);
   }
 
   .links-panel {
-    gap: 0.25rem 0.5rem;
+    gap: 0.2rem 0.4rem;
   }
 
   .link-group h2 {
-    margin-bottom: 0.1rem;
-    font-size: 0.62rem;
+    margin-bottom: 0.08rem;
+    font-size: 0.6rem;
   }
 
   .link-group a {
-    margin-bottom: 0.1rem;
-    padding-block: 0.15rem;
-    font-size: 0.65rem;
+    margin-bottom: 0.08rem;
+    padding-block: 0.12rem;
+    font-size: 0.62rem;
   }
 }
 

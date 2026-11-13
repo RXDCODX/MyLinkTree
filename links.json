@@ -44,7 +44,7 @@
     "avatarUrl": "https://static-cdn.jtvnw.net/jtv_user_pictures/23005ab9-7c2f-45ce-9ffd-c7152a68919e-profile_image-300x300.png"
   },
   "layout": {
-    "profileWidthPercent": 40
+    "profileHeightPercent": 40
   },
   "background": {
     "matrix": {

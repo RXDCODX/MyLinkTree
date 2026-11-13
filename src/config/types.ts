@@ -37,8 +37,8 @@ export interface TwitchConfig {
 }
 
 export interface LayoutConfig {
-  /** Ширина колонки профиля в процентах на широких экранах (20–70). */
-  profileWidthPercent: number;
+  /** Доля высоты экрана для аватарки и заголовка (20–60). */
+  profileHeightPercent: number;
 }
 
 export interface MatrixConfig {

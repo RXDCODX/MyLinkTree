@@ -39,7 +39,7 @@ export const defaultConfig: SiteConfig = {
     avatarUrl: "",
   },
   layout: {
-    profileWidthPercent: 40,
+    profileHeightPercent: 40,
   },
   background: {
     matrix: {
