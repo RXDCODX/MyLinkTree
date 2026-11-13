@@ -7,12 +7,16 @@ $button-bg: rgb(26 26 26 / 80%);
 $button-bg-hover: #c00000;
 $heading-color: #fff;
 
-// bootstrap.css не подключается, поэтому box-sizing надо задать самим —
-// иначе `width` в процентах вместе с padding вылезает за родителя.
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 :root {
@@ -30,43 +34,59 @@ $heading-color: #fff;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  height: 100svh;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: black;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
 }
 
 .main-container {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns:
+    minmax(0, var(--profile-columns, 2fr))
+    minmax(0, var(--links-columns, 3fr));
+  align-items: stretch;
+  gap: clamp(1rem, 3vw, 3rem);
   width: 100%;
-  max-width: 620px;
-  padding: 6vh 1rem 8vh;
+  max-width: none;
+  height: 100svh;
+  min-height: 0;
+  padding: clamp(0.75rem, 2.5vh, 2rem) clamp(0.75rem, 3vw, 3rem);
+  overflow: hidden;
 }
 
-h1,
-h2,
-div.col,
-.link-group {
+.profile-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 100%;
-}
-
-div.col {
+  gap: clamp(0.35rem, 1.5vh, 1.25rem);
   width: 100%;
+  min-width: 0;
+  min-height: 0;
 }
 
-/* Чёрная обводка вокруг всего текста, чтобы он читался на матрице. */
+.links-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(0.2rem, 0.9vh, 0.75rem);
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
 h1,
 h2,
 a {
@@ -84,8 +104,9 @@ a {
 }
 
 h1 {
-  margin: 0.6em 0 0;
-  font-size: clamp(1.7rem, 7vw, 2.6rem);
+  margin: 0;
+  color: $main-color;
+  font-size: clamp(1.3rem, 3vw, 2.6rem);
   line-height: 1.15;
   text-shadow:
     -2px -2px 0 $outline-color,
@@ -95,11 +116,17 @@ h1 {
     0 0 18px rgb(255 0 0 / 55%);
 }
 
+.profile-panel h1 {
+  max-width: 100%;
+  margin: 0;
+}
+
 h2 {
-  margin: 1.8em 0 0.2em;
+  margin: 0 0 clamp(0.15rem, 0.55vh, 0.4rem);
   color: $heading-color;
-  font-size: 1.1em;
-  letter-spacing: 0.22em;
+  font-size: clamp(0.7rem, 1vw, 0.95rem);
+  line-height: 1.1;
+  letter-spacing: 0.2em;
   text-shadow:
     -2px -2px 0 $outline-color,
     2px -2px 0 $outline-color,
@@ -109,7 +136,12 @@ h2 {
 }
 
 .link-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  min-width: 0;
 }
 
 a {
@@ -117,16 +149,18 @@ a {
   gap: 0.7em;
   align-items: center;
   justify-content: center;
-  width: 95%;
-  margin-bottom: 0.4em;
-  padding: 0.6em 1.2em;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: clamp(0.1rem, 0.45vh, 0.35rem);
+  padding: clamp(0.35rem, 0.75vh, 0.6rem) 0.9em;
   border: 1px solid $button-border;
   border-radius: 8px;
   background-color: $button-bg;
   color: whitesmoke;
   font-family: inherit;
-  font-size: clamp(1rem, 4.5vw, 1.5rem);
+  font-size: clamp(0.78rem, min(1.2vw, 1.8vh), 1.1rem);
   font-weight: 500;
+  line-height: 1.15;
   text-decoration: inherit;
   cursor: pointer;
   backdrop-filter: blur(3px);
@@ -164,6 +198,93 @@ a {
   height: 1.15em;
 }
 
+@media (max-height: 640px) and (min-width: 761px) {
+  .links-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: center;
+    gap: clamp(0.25rem, 0.8vh, 0.6rem) clamp(0.5rem, 1vw, 1rem);
+  }
+
+  .profile-panel h1 {
+    font-size: clamp(1rem, 3vh, 1.6rem);
+  }
+}
+
+@media (width <= 760px) {
+  .main-container {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(0.45rem, 1.5vh, 1rem);
+    padding: clamp(0.5rem, 1.8vh, 1rem) clamp(0.6rem, 3vw, 1.25rem);
+  }
+
+  .profile-panel {
+    flex-direction: row;
+    gap: clamp(0.75rem, 3vw, 1.5rem);
+    height: auto;
+  }
+
+  .profile-panel h1 {
+    max-width: calc(100% - 5rem);
+    font-size: clamp(0.9rem, 3.8vw, 1.5rem);
+  }
+
+  .links-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: center;
+    gap: clamp(0.4rem, 1.2vh, 0.8rem) clamp(0.45rem, 2vw, 1rem);
+  }
+
+  .link-group h2 {
+    margin-bottom: 0.25rem;
+    font-size: clamp(0.65rem, 2.4vw, 0.85rem);
+  }
+
+  .link-group a {
+    gap: 0.35em;
+    margin-bottom: 0.2rem;
+    padding: clamp(0.25rem, 0.65vh, 0.4rem) 0.45em;
+    border-radius: 7px;
+    font-size: clamp(0.68rem, 2.4vw, 0.9rem);
+  }
+
+  .my-button {
+    padding-inline: 0.5em;
+  }
+}
+
+@media (max-height: 480px) and (max-width: 760px) {
+  .main-container {
+    gap: 0.35rem;
+    padding-block: 0.35rem;
+  }
+
+  .profile-panel {
+    gap: 0.5rem;
+  }
+
+  .profile-panel h1 {
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+  }
+
+  .links-panel {
+    gap: 0.25rem 0.5rem;
+  }
+
+  .link-group h2 {
+    margin-bottom: 0.1rem;
+    font-size: 0.62rem;
+  }
+
+  .link-group a {
+    margin-bottom: 0.1rem;
+    padding-block: 0.15rem;
+    font-size: 0.65rem;
+  }
+}
+
 @media (width <= 480px) {
   h1,
   h2,
@@ -171,26 +292,4 @@ a {
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-text-stroke-width: 2px;
   }
-}
-
-::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: $main-color;
-
-  &:hover {
-    background-color: $main-color;
-  }
-}
-
-::-webkit-scrollbar-track {
-  background-color: transparent;
 }

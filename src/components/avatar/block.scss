@@ -2,8 +2,9 @@
   // Рамка на 2px больше аватарки с каждой стороны.
   --eb-outset: -2px;
 
-  width: min(320px, 78vw);
+  width: min(100%, 320px, 38svh, 38vw);
   aspect-ratio: 1;
+  flex: 0 0 auto;
   border-radius: 50%;
 }
 
@@ -14,4 +15,22 @@
   border-radius: 50%;
   object-fit: cover;
   background-color: #000;
+}
+
+@media (width <= 760px) {
+  .avatar-border {
+    width: min(18svh, 22vw, 112px);
+  }
+}
+
+@media (max-height: 640px) and (min-width: 761px) {
+  .avatar-border {
+    width: min(26svh, 25vw, 180px);
+  }
+}
+
+@media (max-height: 480px) and (max-width: 760px) {
+  .avatar-border {
+    width: min(12svh, 18vw, 72px);
+  }
 }

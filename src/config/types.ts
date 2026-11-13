@@ -36,6 +36,11 @@ export interface TwitchConfig {
   avatarUrl: string;
 }
 
+export interface LayoutConfig {
+  /** Ширина колонки профиля в процентах на широких экранах (20–70). */
+  profileWidthPercent: number;
+}
+
 export interface MatrixConfig {
   enabled: boolean;
   glyphColor: string;
@@ -72,6 +77,7 @@ export interface SiteConfig {
   site: SiteInfo;
   profile: ProfileConfig;
   twitch: TwitchConfig;
+  layout: LayoutConfig;
   background: {
     matrix: MatrixConfig;
   };
