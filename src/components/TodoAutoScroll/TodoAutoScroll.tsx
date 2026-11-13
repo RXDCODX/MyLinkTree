@@ -1,12 +1,26 @@
 import type { CSSProperties } from "react";
 import "./todo-auto-scroll.scss";
 
-interface Props {
-  items: string[];
+export interface TodoItem {
+  id: string;
+  text: string;
+  completed: boolean;
+  /** Дата закрытия в формате YYYY-MM-DD. Указывается для выполненной задачи. */
+  completedAt?: string;
 }
 
+interface Props {
+  items: TodoItem[];
+}
+
+const formatCompletionDate = (date: string) => {
+  const parts = date.split("-");
+  if (parts.length !== 3) return date;
+  return parts.reverse().join(".");
+};
+
 export const TodoAutoScroll = ({ items }: Props) => {
-  const duration = Math.max(items.length * 6, 24);
+  const duration = Math.max(items.length * 4, 18);
   const trackStyle = {
     "--todo-scroll-duration": duration + "s",
   } as CSSProperties;
@@ -29,12 +43,31 @@ export const TodoAutoScroll = ({ items }: Props) => {
             key={copy}
             aria-hidden={copy === 1}
           >
-            {items.map((item, index) => (
-              <li className="todo-auto-scroll__item" key={copy + "-" + index}>
-                <span className="todo-auto-scroll__marker" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span>{item}</span>
+            {items.map((item) => (
+              <li
+                className="todo-auto-scroll__item"
+                data-completed={item.completed}
+                key={copy + "-" + item.id}
+              >
+                <div className="todo-auto-scroll__task-line">
+                  <span
+                    className="todo-auto-scroll__checkbox"
+                    aria-hidden="true"
+                  >
+                    {item.completed ? "[x]" : "[ ]"}
+                  </span>
+                  <span className="todo-auto-scroll__task-text">
+                    {item.text}
+                  </span>
+                </div>
+                {item.completed && item.completedAt && (
+                  <time
+                    className="todo-auto-scroll__completed-at"
+                    dateTime={item.completedAt}
+                  >
+                    Закрыта: {formatCompletionDate(item.completedAt)}
+                  </time>
+                )}
               </li>
             ))}
           </ul>

@@ -10,13 +10,19 @@ progress is reset.
 
 The second screen is implemented by `AboutScreen`. On desktop it uses two
 equal columns: an about/profile text panel on the left and an automatically
-scrolling TODO list on the right. The TODO list content is currently defined
-in `AboutScreen.tsx` and can be replaced with real items later. Scrolling
-pauses when the list is hovered or focused. On narrow screens, the panels
-stack vertically.
+scrolling TODO list on the right. The panels have no card borders or permanent
+backgrounds; text rows get a subtle background on hover. On narrow screens,
+the panels stack vertically.
 
-The TODO animation uses a duplicated list to create a seamless loop and
-respects `prefers-reduced-motion`.
+TODO entries are typed as `TodoItem` in `TodoAutoScroll.tsx`:
+- `id` — stable task identifier.
+- `text` — task description.
+- `completed` — `true` renders `[x]` and strikes through the task; `false` renders `[ ]`.
+- `completedAt` — optional completion date in `YYYY-MM-DD`; shown beneath a completed task in muted, italic, underlined text.
+
+The example task data lives in `AboutScreen.tsx`. The list automatically
+loops, pauses when hovered or focused, and uses tighter spacing between tasks.
+The animation respects `prefers-reduced-motion`.
 
 Wheel-up navigation returns to the previous screen. The component accepts
 a `screens` array, so future screens can be added without changing the
