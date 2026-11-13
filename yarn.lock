@@ -4575,8 +4575,7 @@ __metadata:
   version: 9.10.6
   resolution: "markdown-to-jsx@npm:9.10.6"
   peerDependencies:
-    react: ">=16.0.0"
-    react-native: "*"
+    react: ">= 16.0.0"
     solid-js: ">=1.0.0"
     vue: ">=3.0.0"
   peerDependenciesMeta:

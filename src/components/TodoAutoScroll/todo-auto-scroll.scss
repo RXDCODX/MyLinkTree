@@ -79,7 +79,7 @@
   background: rgb(255 255 255 / 8%);
 }
 
-.todo-auto-scroll__sequence li[data-completed="true"] {
+.todo-auto-scroll__sequence li[data-completed] {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
