@@ -10,5 +10,6 @@ panel uses the remaining height.
 The value is normalized to the range `20`–`60`; the default is `40`,
 which gives the profile 40% and the links panel 60%.
 
-Link groups are arranged in a two-column grid to keep the buttons visible
-without scrolling on common desktop and mobile screen sizes.
+Link groups and their buttons stay in one vertical column. Compact spacing
+and viewport-aware sizing keep the current set of links visible without
+scrolling on common desktop and mobile screen sizes.
