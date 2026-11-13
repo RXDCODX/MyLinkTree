@@ -1,4 +1,5 @@
-import { Col, Container } from "react-bootstrap";
+import type { CSSProperties } from "react";
+import { Container } from "react-bootstrap";
 import { useSiteConfig } from "../config/useSiteConfig";
 import { useTitleMarquee } from "../hooks/useTitleMarquee";
 import { AvatarBlock } from "./avatar/block";
@@ -12,20 +13,30 @@ export const MainContainer = () => {
 
   useTitleMarquee(config.profile.title, config.site.titleMarquee);
 
+  const { profileHeightPercent, linksWidthPercent } = config.layout;
+  const layoutStyle = {
+    "--profile-rows": `${profileHeightPercent}fr`,
+    "--links-rows": `${100 - profileHeightPercent}fr`,
+    "--links-width": `${linksWidthPercent}vw`,
+  } as CSSProperties;
+
   return (
     <>
       <MatrixBackground config={config.background.matrix} />
-      <Container className="main-container">
-        <Col>
+      <Container as="main" fluid className="main-container" style={layoutStyle}>
+        <section className="profile-panel" aria-label="Профиль">
           <AvatarBlock profile={config.profile} twitch={config.twitch} />
           <FlipTitle
             title={config.profile.title}
             flip={config.profile.titleFlip}
           />
+        </section>
+
+        <section className="links-panel" aria-label="Ссылки">
           {config.groups.map((group) => (
             <LinkGroup key={group.id} group={group} />
           ))}
-        </Col>
+        </section>
       </Container>
     </>
   );

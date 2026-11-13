@@ -1,6 +1,7 @@
 ﻿import { defaultConfig } from "./defaults";
 import type {
   BorderConfig,
+  LayoutConfig,
   LinkGroupConfig,
   LinkItem,
   MatrixConfig,
@@ -40,6 +41,26 @@ export const normalizeBorder = (
     speed: Math.max(0.1, asNumber(raw.speed, fallback.speed)),
     chaos: Math.max(0, asNumber(raw.chaos, fallback.chaos)),
     thickness: Math.max(1, asNumber(raw.thickness, fallback.thickness)),
+  };
+};
+
+export const normalizeLayout = (
+  value: unknown,
+  fallback: LayoutConfig,
+): LayoutConfig => {
+  const raw = asRecord(value);
+  return {
+    profileHeightPercent: Math.min(
+      60,
+      Math.max(
+        10,
+        asNumber(raw.profileHeightPercent, fallback.profileHeightPercent),
+      ),
+    ),
+    linksWidthPercent: Math.min(
+      95,
+      Math.max(10, asNumber(raw.linksWidthPercent, fallback.linksWidthPercent)),
+    ),
   };
 };
 
@@ -181,6 +202,7 @@ export const normalizeConfig = (value: unknown): SiteConfig => {
     site: normalizeSite(raw.site, fallback.site),
     profile: normalizeProfile(raw.profile, fallback.profile),
     twitch: normalizeTwitch(raw.twitch, fallback.twitch),
+    layout: normalizeLayout(raw.layout, fallback.layout),
     background: {
       matrix: normalizeMatrix(
         asRecord(raw.background).matrix,

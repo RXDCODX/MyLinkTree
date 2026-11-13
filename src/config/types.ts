@@ -36,6 +36,13 @@ export interface TwitchConfig {
   avatarUrl: string;
 }
 
+export interface LayoutConfig {
+  /** Доля высоты экрана для аватарки и заголовка (10–60). */
+  profileHeightPercent: number;
+  /** Ширина области ссылок в процентах от ширины экрана на десктопе (10–95). */
+  linksWidthPercent: number;
+}
+
 export interface MatrixConfig {
   enabled: boolean;
   glyphColor: string;
@@ -72,6 +79,7 @@ export interface SiteConfig {
   site: SiteInfo;
   profile: ProfileConfig;
   twitch: TwitchConfig;
+  layout: LayoutConfig;
   background: {
     matrix: MatrixConfig;
   };

@@ -38,6 +38,10 @@ export const defaultConfig: SiteConfig = {
     displayName: "RXDCODX",
     avatarUrl: "",
   },
+  layout: {
+    profileHeightPercent: 40,
+    linksWidthPercent: 20,
+  },
   background: {
     matrix: {
       enabled: true,

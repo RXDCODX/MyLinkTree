@@ -7,8 +7,6 @@ $button-bg: rgb(26 26 26 / 80%);
 $button-bg-hover: #c00000;
 $heading-color: #fff;
 
-// bootstrap.css не подключается, поэтому box-sizing надо задать самим —
-// иначе `width` в процентах вместе с padding вылезает за родителя.
 *,
 *::before,
 *::after {
@@ -29,41 +27,93 @@ $heading-color: #fff;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+html,
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  overflow: hidden;
+}
+
+body {
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
-  overflow-x: hidden;
   background-color: black;
 }
 
 .main-container {
+  /* Базовые значения восстановлены из исходной вертикальной вёрстки. */
+  --page-max-width: 620px;
+  --page-padding-top: 6vh;
+  --page-padding-bottom: 8vh;
+  --profile-title-margin: 0.6em 0 0;
+  --profile-title-font-size: clamp(1.7rem, 7vw, 2.6rem);
+  --group-title-margin-top: 1.8em;
+  --group-title-margin-bottom: 0.2em;
+  --group-title-font-size: 1.1em;
+  --link-button-width: 95%;
+  --link-button-margin-bottom: 0.4em;
+  --link-button-padding-block: 0.6em;
+  --link-button-padding-inline: 1.2em;
+  --link-button-font-size: clamp(1rem, 4.5vw, 1.5rem);
+
   position: relative;
   z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows:
+    minmax(0, var(--profile-rows, 40fr))
+    minmax(0, var(--links-rows, 60fr));
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  height: 100svh;
+  min-height: 0;
+  margin-inline: auto;
+  padding: var(--page-padding-top) 1rem var(--page-padding-bottom);
+  overflow: hidden;
+}
+
+.profile-panel {
+  container-name: profile-area;
+  container-type: size;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 620px;
-  padding: 6vh 1rem 8vh;
+  justify-content: center;
+  gap: 0;
+  width: min(100%, var(--page-max-width));
+  min-width: 0;
+  min-height: 0;
+  margin-inline: auto;
+}
+
+.links-panel {
+  container-name: links-area;
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: min(var(--links-width, 20vw), var(--page-max-width), calc(100vw - 2rem));
+  min-width: 0;
+  min-height: 0;
+  margin-inline: auto;
 }
 
 h1,
 h2,
-div.col,
 .link-group {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   max-width: 100%;
-}
-
-div.col {
-  width: 100%;
 }
 
 /* Чёрная обводка вокруг всего текста, чтобы он читался на матрице. */
@@ -84,8 +134,9 @@ a {
 }
 
 h1 {
-  margin: 0.6em 0 0;
-  font-size: clamp(1.7rem, 7vw, 2.6rem);
+  flex: 0 0 auto;
+  margin: var(--profile-title-margin);
+  font-size: var(--profile-title-font-size);
   line-height: 1.15;
   text-shadow:
     -2px -2px 0 $outline-color,
@@ -96,9 +147,12 @@ h1 {
 }
 
 h2 {
-  margin: 1.8em 0 0.2em;
+  flex: 0 0 auto;
+  margin:
+    var(--group-title-margin-top) 0
+    var(--group-title-margin-bottom);
   color: $heading-color;
-  font-size: 1.1em;
+  font-size: var(--group-title-font-size);
   letter-spacing: 0.22em;
   text-shadow:
     -2px -2px 0 $outline-color,
@@ -108,8 +162,21 @@ h2 {
     0 0 14px rgb(255 77 109 / 45%);
 }
 
+/*
+ * Each group gets one extra flex unit for its heading. This prevents a
+ * one-link group (for example Twitch) from losing its button to the heading.
+ * Every button then receives one unit of the remaining group height.
+ */
 .link-group {
+  flex: var(--group-weight, 1) 1 0;
   width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.link-group > a {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 a {
@@ -117,15 +184,16 @@ a {
   gap: 0.7em;
   align-items: center;
   justify-content: center;
-  width: 95%;
-  margin-bottom: 0.4em;
-  padding: 0.6em 1.2em;
+  width: var(--link-button-width);
+  max-width: 100%;
+  margin-bottom: var(--link-button-margin-bottom);
+  padding: var(--link-button-padding-block) var(--link-button-padding-inline);
   border: 1px solid $button-border;
   border-radius: 8px;
   background-color: $button-bg;
   color: whitesmoke;
   font-family: inherit;
-  font-size: clamp(1rem, 4.5vw, 1.5rem);
+  font-size: var(--link-button-font-size);
   font-weight: 500;
   text-decoration: inherit;
   cursor: pointer;
@@ -162,6 +230,36 @@ a {
   flex: 0 0 auto;
   width: 1.15em;
   height: 1.15em;
+}
+
+/* Аватарка и заголовок рассчитываются от ширины profile-panel, не links-panel. */
+@supports (height: 1cqh) {
+  .profile-panel .avatar-border {
+    width: min(320px, 80cqh, 78vw);
+  }
+
+  .profile-panel h1 {
+    font-size: clamp(1rem, min(7vw, 11cqh), 2.6rem);
+  }
+
+  .links-panel {
+    --group-title-margin-top: clamp(0.12rem, 2.8cqh, 1.8em);
+    --group-title-margin-bottom: clamp(0.08rem, 0.5cqh, 0.2em);
+    --group-title-font-size: clamp(0.58rem, 2.4cqh, 1.1em);
+    --link-button-margin-bottom: clamp(0.08rem, 0.75cqh, 0.4em);
+    --link-button-padding-block: clamp(0.12rem, 1.05cqh, 0.6em);
+    --link-button-font-size: clamp(0.58rem, 2.4cqh, 1.5rem);
+  }
+}
+
+@media (width <= 760px) {
+  .profile-panel {
+    width: min(100%, var(--page-max-width));
+  }
+
+  .links-panel {
+    width: min(95vw, var(--page-max-width));
+  }
 }
 
 @media (width <= 480px) {
