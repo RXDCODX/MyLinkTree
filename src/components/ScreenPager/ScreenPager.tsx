@@ -8,7 +8,6 @@ interface Props {
 }
 
 const WHEEL_STEPS_PER_SCREEN = 3;
-const WHEEL_STEP_PROGRESS = 1 / WHEEL_STEPS_PER_SCREEN;
 const MAX_PROGRESS_PER_EVENT = 1;
 const TRANSITION_DURATION_MS = 760;
 const LINE_DELTA_IN_PIXELS = 40;
@@ -94,7 +93,7 @@ export const ScreenPager = ({ screens }: Props) => {
   }, [screens.length]);
 
   const trackStyle = {
-    "--active-screen": activeScreen,
+    transform: `translate3d(0, -${activeScreen * 100}svh, 0)`,
   } as CSSProperties;
 
   return (
