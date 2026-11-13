@@ -20,6 +20,17 @@ TODO entries are typed as `TodoItem` in `TodoAutoScroll.tsx`:
 - `completed` — `true` renders `[x]` and strikes through the task; `false` renders `[ ]`.
 - `completedAt` — optional completion date in `YYYY-MM-DD`; shown beneath a completed task in muted, italic, underlined text.
 
+Example completed entry:
+
+```ts
+{
+  id: "project",
+  text: "Finish the project",
+  completed: true,
+  completedAt: "2026-11-13",
+}
+```
+
 The example task data lives in `AboutScreen.tsx`. The list automatically
 loops, pauses when hovered or focused, and uses tighter spacing between tasks.
 The animation respects `prefers-reduced-motion`.
