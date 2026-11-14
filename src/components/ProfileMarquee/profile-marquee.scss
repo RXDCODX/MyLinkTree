@@ -50,6 +50,7 @@
 
 .profile-marquee__item {
   display: flex;
+  width: 100%;
   min-height: 0;
   flex: 0 0 auto;
   flex-direction: column;
@@ -94,6 +95,14 @@
     -2px 2px 0 #000,
     2px 2px 0 #000,
     0 0 18px rgb(255 0 0 / 55%);
+}
+
+.profile-marquee[data-direction="down"] .profile-marquee__name {
+  align-self: flex-end;
+}
+
+.profile-marquee[data-direction="up"] .profile-marquee__name {
+  align-self: flex-start;
 }
 
 .profile-marquee__character {
