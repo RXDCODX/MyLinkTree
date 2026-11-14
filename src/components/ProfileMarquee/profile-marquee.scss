@@ -23,7 +23,7 @@
 
 .profile-marquee__track {
   display: flex;
-  height: 200%;
+  height: max-content;
   flex-direction: column;
   animation-duration: var(--profile-marquee-duration, 22s);
   animation-timing-function: linear;
@@ -43,7 +43,7 @@
   display: flex;
   width: 100%;
   min-height: 0;
-  flex: 0 0 50%;
+  flex: 0 0 auto;
   flex-direction: column;
   justify-content: center;
 }
