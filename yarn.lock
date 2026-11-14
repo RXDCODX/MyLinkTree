@@ -2952,6 +2952,7 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.16"
     gh-pages: "npm:^6.3.0"
     globals: "npm:^15.14.0"
+    markdown-to-jsx: "npm:^9.10.6"
     prettier: "npm:^3.4.2"
     react: "npm:^19.0.0"
     react-bootstrap: "npm:^2.10.7"
@@ -3072,6 +3073,7 @@ __metadata:
       optional: true
     vue:
       optional: true
+  checksum: 10c0/a67b12068baa1aa9aa23319100cf954856a768436f59ec22b6b632928a87644ed0a9fcdd9860c75b9f29c2fa43a3b70679eff0b48dc6c321923df9163be5bb8c
   languageName: node
   linkType: hard
 
