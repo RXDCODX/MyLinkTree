@@ -54,7 +54,7 @@
   flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
-  gap: 0.45rem;
+  gap: 1rem;
 }
 
 .profile-marquee__avatar {
@@ -92,6 +92,12 @@
     -2px 2px 0 #000,
     2px 2px 0 #000,
     0 0 18px rgb(255 0 0 / 55%);
+}
+
+.profile-marquee__character {
+  display: inline-block;
+  /* The sideways text glyph is clockwise; flip it 180° to face counterclockwise. */
+  transform: rotate(180deg);
 }
 
 @keyframes profile-marquee-down {

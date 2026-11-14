@@ -36,7 +36,16 @@ export const ProfileMarquee = ({ profile, twitch, direction }: Props) => {
                   <div className="profile-marquee__avatar">
                     <AvatarBlock profile={profile} twitch={twitch} />
                   </div>
-                  <span className="profile-marquee__name">{nickname}</span>
+                  <span className="profile-marquee__name">
+                    {Array.from(nickname, (character, characterIndex) => (
+                      <span
+                        className="profile-marquee__character"
+                        key={characterIndex}
+                      >
+                        {character === " " ? "\u00a0" : character}
+                      </span>
+                    ))}
+                  </span>
                 </div>
               ))}
             </div>
