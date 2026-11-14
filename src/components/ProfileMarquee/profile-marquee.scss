@@ -68,8 +68,11 @@
 }
 
 .profile-marquee__name {
-  display: block;
+  display: flex;
+  max-width: 100%;
   max-height: 10rem;
+  flex-direction: column;
+  align-items: center;
   overflow: hidden;
   color: red;
   font-size: clamp(0.9rem, 1.15vw, 1.1rem);
@@ -77,10 +80,9 @@
   letter-spacing: 0.12em;
   line-height: 1.15;
   text-align: center;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  writing-mode: vertical-rl;
-  text-orientation: sideways;
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
   paint-order: stroke fill;
 
   /* Match the red title and black outline on the first screen. */
@@ -95,9 +97,8 @@
 }
 
 .profile-marquee__character {
-  display: inline-block;
-  /* The sideways text glyph is clockwise; flip it 180° to face counterclockwise. */
-  transform: rotate(180deg);
+  display: block;
+  transform: none;
 }
 
 @keyframes profile-marquee-down {
