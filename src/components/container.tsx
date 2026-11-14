@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { Container } from "react-bootstrap";
 import { ScreenPager } from "./ScreenPager/ScreenPager";
 import { AboutScreen } from "./AboutScreen/AboutScreen";
+import { TodoScreen } from "./TodoScreen/TodoScreen";
 import { useSiteConfig } from "../config/useSiteConfig";
 import { useTitleMarquee } from "../hooks/useTitleMarquee";
 import { AvatarBlock } from "./avatar/block";
@@ -52,6 +53,11 @@ export const MainContainer = () => {
             profile={config.profile}
             twitch={config.twitch}
             key="about"
+          />,
+          <TodoScreen
+            profile={config.profile}
+            twitch={config.twitch}
+            key="todo"
           />,
         ]}
       />
