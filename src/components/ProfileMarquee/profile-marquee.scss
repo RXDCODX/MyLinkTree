@@ -45,8 +45,7 @@
   flex: 0 0 50%;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
-  padding-block: 0.5rem;
+  justify-content: center;
 }
 
 .profile-marquee__item {
@@ -72,17 +71,27 @@
   display: block;
   max-height: 10rem;
   overflow: hidden;
-  color: rgb(255 255 255 / 82%);
-  font-size: clamp(0.72rem, 1vw, 0.9rem);
+  color: red;
+  font-size: clamp(0.9rem, 1.15vw, 1.1rem);
   font-weight: 700;
   letter-spacing: 0.12em;
-  line-height: 1;
+  line-height: 1.15;
   text-align: center;
-  text-shadow: 0 0 12px rgb(255 48 48 / 35%);
   text-overflow: ellipsis;
   white-space: nowrap;
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  paint-order: stroke fill;
+
+  /* Match the red title and black outline on the first screen. */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-text-stroke: 3px #000;
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000,
+    0 0 18px rgb(255 0 0 / 55%);
 }
 
 @keyframes profile-marquee-down {

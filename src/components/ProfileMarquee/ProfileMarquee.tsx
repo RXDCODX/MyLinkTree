@@ -12,7 +12,7 @@ interface Props {
 }
 
 const MARQUEE_COPIES = 2;
-const ITEMS_PER_COPY = 6;
+const ITEMS_PER_COPY = 1;
 
 export const ProfileMarquee = ({ profile, twitch, direction }: Props) => {
   const nickname =
