@@ -37,6 +37,7 @@
 
 .profile-marquee[data-direction="up"] .profile-marquee__track {
   animation-name: profile-marquee-up;
+  animation-delay: 1.25s;
 }
 
 .profile-marquee__sequence {
