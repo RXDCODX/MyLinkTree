@@ -46,6 +46,8 @@
   flex: 0 0 auto;
   flex-direction: column;
   justify-content: center;
+  /* Keep the next copy outside the viewport until the current one exits. */
+  margin-block-end: clamp(12rem, 44vh, 22rem);
 }
 
 .profile-marquee[data-direction="down"] .profile-marquee__sequence {
