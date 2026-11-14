@@ -57,6 +57,8 @@
 }
 
 .profile-marquee__item {
+  --profile-marquee-avatar-size: clamp(2.5rem, 4vw, 3.5rem);
+
   display: flex;
   width: max-content;
   max-width: 100%;
@@ -65,10 +67,11 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  margin: 0 1rem 0 0;
 }
 
 .profile-marquee__avatar {
-  width: clamp(2.5rem, 4vw, 3.5rem);
+  width: var(--profile-marquee-avatar-size);
   flex: 0 0 auto;
 }
 
@@ -80,12 +83,11 @@
 .profile-marquee__name {
   display: flex;
   max-width: 100%;
-  max-height: 10rem;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
   color: red;
-  font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+  font-size: var(--profile-marquee-avatar-size);
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1.15;
