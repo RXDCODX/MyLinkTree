@@ -41,28 +41,30 @@
 
 .profile-marquee__sequence {
   display: flex;
+  width: 100%;
   min-height: 0;
   flex: 0 0 50%;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+}
+
+.profile-marquee[data-direction="down"] .profile-marquee__sequence {
+  align-items: flex-end;
+}
+
+.profile-marquee[data-direction="up"] .profile-marquee__sequence {
+  align-items: flex-start;
 }
 
 .profile-marquee__item {
   display: flex;
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   min-height: 0;
   flex: 0 0 auto;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
-}
-
-.profile-marquee[data-direction="down"] .profile-marquee__item {
-  align-items: flex-end;
-}
-
-.profile-marquee[data-direction="up"] .profile-marquee__item {
-  align-items: flex-start;
 }
 
 .profile-marquee__avatar {
