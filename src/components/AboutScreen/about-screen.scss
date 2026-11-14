@@ -199,6 +199,59 @@
   accent-color: #ff6666;
 }
 
+/* Third-screen task list styling. The Markdown source remains the source of truth. */
+.about-screen--todo .about-screen__markdown {
+  text-align: left;
+}
+
+.about-screen--todo .about-screen__markdown ul {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 0.85em;
+  padding: 0;
+  list-style: none;
+}
+
+.about-screen--todo .about-screen__markdown li:has(input[type="checkbox"]) {
+  margin: 0.3em 0;
+  padding: 0.45em 0.65em;
+  text-align: left;
+}
+
+.about-screen--todo .about-screen__markdown li input[type="checkbox"] {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.65em;
+  vertical-align: -0.08em;
+  accent-color: #ff3030;
+}
+
+.about-screen--todo .about-screen__markdown li:has(input[type="checkbox"]:checked) {
+  color: rgb(255 255 255 / 68%);
+}
+
+.about-screen--todo .about-screen__markdown li > p {
+  width: auto;
+  margin: 0.15em 0 0 1.8em;
+  padding: 0;
+  color: rgb(255 255 255 / 48%);
+  font-size: 0.7em;
+  font-style: italic;
+  line-height: 1.35;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.about-screen--todo .about-screen__markdown li > p:hover {
+  background: transparent;
+}
+
+.about-screen--todo .about-screen__markdown li > p em {
+  color: inherit;
+  font-style: inherit;
+}
+
 @media (width <= 640px) {
   .about-screen {
     grid-template-columns: minmax(0, 1fr);
