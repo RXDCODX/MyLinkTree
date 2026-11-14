@@ -8,37 +8,26 @@ bottom indicates how much input remains before the transition. If wheel
 input pauses for one second before the threshold is reached, accumulated
 progress is reset.
 
-The second screen is implemented by `AboutScreen`. On desktop it uses two
-equal columns: an about/profile panel on the left and a TODO panel on the right.
-Both columns render Markdown from separate files:
+The second screen is implemented by `AboutScreen`. On desktop it uses three
+columns: a downward-moving profile marquee on the left, centered Markdown
+content in the middle, and an upward-moving profile marquee on the right.
 
-- `src/content/about.md` — content for the left column.
-- `src/content/todo.md` — content for the right column.
-
-The files are imported as raw text with Vite's `?raw` suffix and rendered by
-`markdown-to-jsx`. The renderer supports CommonMark and GitHub Flavored
-Markdown, including headings, nested lists, tables, links, fenced code blocks,
-strikethrough, and task lists. The default URL and HTML sanitization remains
+The center column renders Markdown from `src/content/about.md` using
+`markdown-to-jsx`. It supports CommonMark and GitHub Flavored Markdown,
+including headings, nested lists, tables, links, fenced code blocks,
+strikethrough, and task lists. Default URL and HTML sanitization remains
 enabled.
 
-Use regular GFM task-list syntax in `todo.md`:
+Both profile marquees use the existing site configuration:
+- `twitch.displayName` (falling back to `twitch.login`) supplies the nickname.
+- `profile.avatarUrl` supplies the avatar, with the existing local fallback.
+- The avatar is circular and remains fixed above the scrolling nickname.
 
-```md
-- [ ] An open task
-- [x] A completed task
-
-  _Закрыта: 13.11.2026_
-```
-
-A completed task is crossed out. Its following indented paragraph is displayed
-beneath it in muted, small, italic, underlined text. Other Markdown elements
-are styled to match the dark background and red accents. Text rows get a
-subtle background on hover; the columns have no card borders or permanent
-backgrounds.
-
-The TODO column automatically loops, pauses when hovered or focused, and uses
-tighter spacing between tasks. The animation respects `prefers-reduced-motion`.
-On narrow screens, the panels stack vertically.
+The two marquees repeat the nickname in opposite vertical directions. On
+narrow screens (640px and below), both side marquees are hidden and the
+centered Markdown content occupies the full width. Text rows keep a subtle
+hover background; the content has no card border or permanent background.
+All marquee animation respects `prefers-reduced-motion`.
 
 Wheel-up navigation returns to the previous screen. The component accepts a
 `screens` array, so future screens can be added without changing the

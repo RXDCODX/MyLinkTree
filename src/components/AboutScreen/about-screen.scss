@@ -1,38 +1,56 @@
 .about-screen {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1rem, 3vw, 3rem);
+  grid-template-columns:
+    minmax(5rem, 0.7fr)
+    minmax(0, 3.6fr)
+    minmax(5rem, 0.7fr);
+  gap: clamp(0.5rem, 2vw, 2rem);
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: clamp(1rem, 4vw, 4rem);
+  padding: clamp(0.75rem, 3vw, 3rem);
   color: #f5f5f5;
 }
 
-.about-screen__panel {
+.about-screen__side {
   display: flex;
-  flex-direction: column;
   min-width: 0;
   min-height: 0;
-  padding: clamp(0.5rem, 1.5vw, 1.25rem);
+  align-items: stretch;
+  justify-content: center;
   overflow: hidden;
+  padding-block: clamp(0.5rem, 2vh, 1.5rem);
+}
+
+.about-screen__content {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-inline: clamp(0rem, 1.25vw, 1.25rem);
 }
 
 .about-screen__markdown {
+  width: 100%;
+  max-height: 100%;
   min-width: 0;
   min-height: 0;
   overflow: auto;
   color: rgb(255 255 255 / 88%);
   font-size: clamp(0.95rem, 1.35vw, 1.15rem);
   line-height: 1.65;
-  text-align: left;
+  text-align: center;
   overflow-wrap: anywhere;
   scrollbar-width: thin;
   scrollbar-color: rgb(255 255 255 / 25%) transparent;
 }
 
 .about-screen__markdown > div {
-  min-width: 0;
+  width: 100%;
+  max-width: 58rem;
+  margin: auto;
 }
 
 .about-screen__markdown h1,
@@ -43,7 +61,7 @@
 .about-screen__markdown h6 {
   color: #ff3030;
   line-height: 1.2;
-  text-align: left;
+  text-align: center;
   text-shadow: 0 0 18px rgb(255 0 0 / 35%);
 }
 
@@ -76,7 +94,7 @@
 .about-screen__markdown p {
   width: fit-content;
   max-width: 100%;
-  margin: 0 0 0.75em;
+  margin: 0 auto 0.75em;
   padding: 0.2em 0.45em;
 }
 
@@ -88,8 +106,11 @@
 
 .about-screen__markdown ul,
 .about-screen__markdown ol {
-  margin: 0 0 0.85em;
+  display: table;
+  max-width: 100%;
+  margin: 0 auto 0.85em;
   padding-left: 1.5em;
+  text-align: left;
 }
 
 .about-screen__markdown li {
@@ -109,10 +130,13 @@
 }
 
 .about-screen__markdown blockquote {
-  margin: 0.9em 0;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.9em auto;
   padding: 0.2em 0.85em;
   border-left: 3px solid rgb(255 48 48 / 65%);
   color: rgb(255 255 255 / 68%);
+  text-align: left;
 }
 
 .about-screen__markdown pre {
@@ -124,6 +148,7 @@
   background: rgb(0 0 0 / 28%);
   font-size: 0.85em;
   line-height: 1.5;
+  text-align: left;
 }
 
 .about-screen__markdown :not(pre) > code {
@@ -137,9 +162,10 @@
 .about-screen__markdown table {
   display: block;
   max-width: 100%;
-  margin: 0.9em 0;
+  margin: 0.9em auto;
   overflow-x: auto;
   border-collapse: collapse;
+  text-align: left;
   white-space: nowrap;
 }
 
@@ -173,13 +199,15 @@
 @media (width <= 640px) {
   .about-screen {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
-  .about-screen__panel {
-    padding: 0.5rem;
+  .about-screen__side {
+    display: none;
+  }
+
+  .about-screen__content {
+    padding-inline: 0;
   }
 
   .about-screen__markdown {

@@ -48,7 +48,11 @@ export const MainContainer = () => {
               ))}
             </section>
           </Container>,
-          <AboutScreen key="about" />,
+          <AboutScreen
+            profile={config.profile}
+            twitch={config.twitch}
+            key="about"
+          />,
         ]}
       />
     </>
