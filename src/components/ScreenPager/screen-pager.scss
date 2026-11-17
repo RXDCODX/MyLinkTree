@@ -5,6 +5,7 @@
   height: 100svh;
   overflow: hidden;
   isolation: isolate;
+  overscroll-behavior: none;
 }
 
 .screen-pager__track {

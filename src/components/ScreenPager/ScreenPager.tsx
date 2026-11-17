@@ -12,6 +12,10 @@ const WHEEL_DELTA_PER_NOTCH = 300;
 const WHEEL_IDLE_RESET_MS = 1000;
 const TRANSITION_DURATION_MS = 760;
 const LINE_DELTA_IN_PIXELS = 40;
+const TOUCH_SWIPE_THRESHOLD_RATIO = 0.22;
+const TOUCH_SWIPE_MIN_PX = 120;
+const TOUCH_SWIPE_MAX_PX = 200;
+const TOUCH_DIRECTION_LOCK_PX = 12;
 
 export const ScreenPager = ({ screens }: Props) => {
   const [activeScreen, setActiveScreen] = useState(0);
@@ -22,8 +26,84 @@ export const ScreenPager = ({ screens }: Props) => {
   const transitioningRef = useRef(false);
   const transitionTimerRef = useRef<number | null>(null);
   const wheelIdleTimerRef = useRef<number | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const touchTargetRef = useRef<EventTarget | null>(null);
+  const touchScrollLockedRef = useRef(false);
+  const touchTriggeredRef = useRef(false);
 
   useEffect(() => {
+    const clearWheelProgress = () => {
+      accumulatedWheelDeltaRef.current = 0;
+      directionRef.current = 0;
+      setScrollProgress(0);
+
+      if (wheelIdleTimerRef.current !== null) {
+        window.clearTimeout(wheelIdleTimerRef.current);
+        wheelIdleTimerRef.current = null;
+      }
+    };
+
+    const startTransition = (nextScreen: number) => {
+      if (
+        transitioningRef.current ||
+        nextScreen < 0 ||
+        nextScreen >= screens.length
+      ) {
+        return;
+      }
+
+      clearWheelProgress();
+      activeScreenRef.current = nextScreen;
+      setActiveScreen(nextScreen);
+      transitioningRef.current = true;
+      setScrollProgress(1);
+
+      if (transitionTimerRef.current !== null) {
+        window.clearTimeout(transitionTimerRef.current);
+      }
+
+      transitionTimerRef.current = window.setTimeout(() => {
+        transitioningRef.current = false;
+        setScrollProgress(0);
+        transitionTimerRef.current = null;
+      }, TRANSITION_DURATION_MS);
+    };
+
+    const canScrollTargetVertically = (
+      target: EventTarget | null,
+      direction: number,
+    ) => {
+      let element = target instanceof HTMLElement ? target : null;
+
+      while (
+        element &&
+        !element.classList.contains("screen-pager__screen")
+      ) {
+        const overflowY = window.getComputedStyle(element).overflowY;
+        const isScrollable =
+          (overflowY === "auto" ||
+            overflowY === "scroll" ||
+            overflowY === "overlay") &&
+          element.scrollHeight > element.clientHeight + 1;
+
+        if (isScrollable) {
+          const canScrollDown =
+            element.scrollTop + element.clientHeight <
+            element.scrollHeight - 1;
+          const canScrollUp = element.scrollTop > 1;
+
+          if ((direction > 0 && canScrollDown) || (direction < 0 && canScrollUp)) {
+            return true;
+          }
+        }
+
+        element = element.parentElement;
+      }
+
+      return false;
+    };
+
     const handleWheel = (event: WheelEvent) => {
       if (event.deltaY === 0 || screens.length < 2) return;
 
@@ -37,15 +117,7 @@ export const ScreenPager = ({ screens }: Props) => {
 
       // За границами списка экранов сбрасываем незавершённый прогресс.
       if (nextScreen < 0 || nextScreen >= screens.length) {
-        accumulatedWheelDeltaRef.current = 0;
-        directionRef.current = 0;
-        setScrollProgress(0);
-
-        if (wheelIdleTimerRef.current !== null) {
-          window.clearTimeout(wheelIdleTimerRef.current);
-          wheelIdleTimerRef.current = null;
-        }
-
+        clearWheelProgress();
         return;
       }
 
@@ -62,7 +134,6 @@ export const ScreenPager = ({ screens }: Props) => {
       }
 
       // Считаем накопленную дистанцию прокрутки, а не количество wheel events.
-      // Несколько событий от одного физического щелчка складываются в один notch.
       accumulatedWheelDeltaRef.current = Math.min(
         WHEEL_NOTCHES_PER_SCREEN * WHEEL_DELTA_PER_NOTCH,
         accumulatedWheelDeltaRef.current + delta,
@@ -79,27 +150,7 @@ export const ScreenPager = ({ screens }: Props) => {
         accumulatedWheelDeltaRef.current >=
         WHEEL_NOTCHES_PER_SCREEN * WHEEL_DELTA_PER_NOTCH
       ) {
-        if (wheelIdleTimerRef.current !== null) {
-          window.clearTimeout(wheelIdleTimerRef.current);
-          wheelIdleTimerRef.current = null;
-        }
-
-        activeScreenRef.current = nextScreen;
-        setActiveScreen(nextScreen);
-        transitioningRef.current = true;
-        accumulatedWheelDeltaRef.current = 0;
-        directionRef.current = 0;
-        setScrollProgress(1);
-
-        if (transitionTimerRef.current !== null) {
-          window.clearTimeout(transitionTimerRef.current);
-        }
-
-        transitionTimerRef.current = window.setTimeout(() => {
-          transitioningRef.current = false;
-          setScrollProgress(0);
-          transitionTimerRef.current = null;
-        }, TRANSITION_DURATION_MS);
+        startTransition(nextScreen);
       } else {
         // Если прокрутка прервалась на секунду, начинаем накопление заново.
         if (wheelIdleTimerRef.current !== null) {
@@ -115,10 +166,111 @@ export const ScreenPager = ({ screens }: Props) => {
       }
     };
 
+    const resetTouchGesture = () => {
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      touchTargetRef.current = null;
+      touchScrollLockedRef.current = false;
+
+      if (!touchTriggeredRef.current) {
+        setScrollProgress(0);
+      }
+
+      touchTriggeredRef.current = false;
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1 || transitioningRef.current) {
+        resetTouchGesture();
+        return;
+      }
+
+      const touch = event.touches[0];
+      touchStartXRef.current = touch.clientX;
+      touchStartYRef.current = touch.clientY;
+      touchTargetRef.current = event.target;
+      touchScrollLockedRef.current = false;
+      touchTriggeredRef.current = false;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (
+        touchStartXRef.current === null ||
+        touchStartYRef.current === null ||
+        touchTriggeredRef.current ||
+        touchScrollLockedRef.current ||
+        event.touches.length !== 1 ||
+        screens.length < 2
+      ) {
+        return;
+      }
+
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - touchStartXRef.current;
+      const deltaY = touch.clientY - touchStartYRef.current;
+
+      // Не перехватываем горизонтальные жесты и мелкие движения пальца.
+      if (
+        Math.abs(deltaY) < TOUCH_DIRECTION_LOCK_PX ||
+        Math.abs(deltaY) <= Math.abs(deltaX)
+      ) {
+        return;
+      }
+
+      // Движение пальца вверх ведёт на следующий экран, вниз — на предыдущий.
+      const direction = deltaY < 0 ? 1 : -1;
+
+      // Не мешаем прокручивать длинный Markdown. Если жест начат внутри
+      // прокручиваемого блока, отдаём весь свайп этому блоку.
+      if (canScrollTargetVertically(touchTargetRef.current, direction)) {
+        touchScrollLockedRef.current = true;
+        setScrollProgress(0);
+        return;
+      }
+
+      // Блокируем нативную вертикальную прокрутку только для свайпа пейджера.
+      event.preventDefault();
+
+      const nextScreen = activeScreenRef.current + direction;
+      if (nextScreen < 0 || nextScreen >= screens.length) {
+        setScrollProgress(0);
+        return;
+      }
+
+      const threshold = Math.min(
+        TOUCH_SWIPE_MAX_PX,
+        Math.max(
+          TOUCH_SWIPE_MIN_PX,
+          window.innerHeight * TOUCH_SWIPE_THRESHOLD_RATIO,
+        ),
+      );
+      const progress = Math.min(1, Math.abs(deltaY) / threshold);
+      setScrollProgress(progress);
+
+      // Требуем протяжённый свайп, а не короткий flick.
+      if (Math.abs(deltaY) >= threshold) {
+        touchTriggeredRef.current = true;
+        startTransition(nextScreen);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      resetTouchGesture();
+    };
+
     window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchEnd);
+
       if (transitionTimerRef.current !== null) {
         window.clearTimeout(transitionTimerRef.current);
       }
@@ -151,7 +303,7 @@ export const ScreenPager = ({ screens }: Props) => {
         className="screen-pager__progress"
         data-visible={scrollProgress > 0}
         role="progressbar"
-        aria-label="Прогресс перехода к следующему экрану"
+        aria-label="Прогресс переключения экрана"
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(scrollProgress * 100)}
