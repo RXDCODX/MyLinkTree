@@ -28,6 +28,8 @@ export const ScreenPager = ({ screens }: Props) => {
   const wheelIdleTimerRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
+  const touchTargetRef = useRef<EventTarget | null>(null);
+  const touchScrollLockedRef = useRef(false);
   const touchTriggeredRef = useRef(false);
 
   useEffect(() => {
@@ -66,6 +68,40 @@ export const ScreenPager = ({ screens }: Props) => {
         setScrollProgress(0);
         transitionTimerRef.current = null;
       }, TRANSITION_DURATION_MS);
+    };
+
+    const canScrollTargetVertically = (
+      target: EventTarget | null,
+      direction: number,
+    ) => {
+      let element = target instanceof HTMLElement ? target : null;
+
+      while (
+        element &&
+        !element.classList.contains("screen-pager__screen")
+      ) {
+        const overflowY = window.getComputedStyle(element).overflowY;
+        const isScrollable =
+          (overflowY === "auto" ||
+            overflowY === "scroll" ||
+            overflowY === "overlay") &&
+          element.scrollHeight > element.clientHeight + 1;
+
+        if (isScrollable) {
+          const canScrollDown =
+            element.scrollTop + element.clientHeight <
+            element.scrollHeight - 1;
+          const canScrollUp = element.scrollTop > 1;
+
+          if ((direction > 0 && canScrollDown) || (direction < 0 && canScrollUp)) {
+            return true;
+          }
+        }
+
+        element = element.parentElement;
+      }
+
+      return false;
     };
 
     const handleWheel = (event: WheelEvent) => {
@@ -133,6 +169,8 @@ export const ScreenPager = ({ screens }: Props) => {
     const resetTouchGesture = () => {
       touchStartXRef.current = null;
       touchStartYRef.current = null;
+      touchTargetRef.current = null;
+      touchScrollLockedRef.current = false;
 
       if (!touchTriggeredRef.current) {
         setScrollProgress(0);
@@ -150,6 +188,8 @@ export const ScreenPager = ({ screens }: Props) => {
       const touch = event.touches[0];
       touchStartXRef.current = touch.clientX;
       touchStartYRef.current = touch.clientY;
+      touchTargetRef.current = event.target;
+      touchScrollLockedRef.current = false;
       touchTriggeredRef.current = false;
     };
 
@@ -158,6 +198,7 @@ export const ScreenPager = ({ screens }: Props) => {
         touchStartXRef.current === null ||
         touchStartYRef.current === null ||
         touchTriggeredRef.current ||
+        touchScrollLockedRef.current ||
         event.touches.length !== 1 ||
         screens.length < 2
       ) {
@@ -176,13 +217,21 @@ export const ScreenPager = ({ screens }: Props) => {
         return;
       }
 
-      // Блокируем нативную вертикальную прокрутку только для вертикального свайпа.
-      event.preventDefault();
-
       // Движение пальца вверх ведёт на следующий экран, вниз — на предыдущий.
       const direction = deltaY < 0 ? 1 : -1;
-      const nextScreen = activeScreenRef.current + direction;
 
+      // Не мешаем прокручивать длинный Markdown. Если жест начат внутри
+      // прокручиваемого блока, отдаём весь свайп этому блоку.
+      if (canScrollTargetVertically(touchTargetRef.current, direction)) {
+        touchScrollLockedRef.current = true;
+        setScrollProgress(0);
+        return;
+      }
+
+      // Блокируем нативную вертикальную прокрутку только для свайпа пейджера.
+      event.preventDefault();
+
+      const nextScreen = activeScreenRef.current + direction;
       if (nextScreen < 0 || nextScreen >= screens.length) {
         setScrollProgress(0);
         return;
